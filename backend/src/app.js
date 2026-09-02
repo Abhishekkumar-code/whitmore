@@ -24,7 +24,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 connectodb();
-app.use("/api/product",productrouter)
 app.use(passport.initialize());
 passport.use(
   new GoogleStrategy(
@@ -48,5 +47,5 @@ passport.use(
 );
 
 app.use("/api/auth", authrouter);
-
+app.use("/api/product",productrouter)
 export default app;
