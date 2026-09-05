@@ -17,11 +17,11 @@ import {
 } from "lucide-react";
 import { useproduct } from "../hooks/useproduct";
 
-/* ─── constants ─────────────────────────────────────── */
+
 const CURRENCIES = ["INR", "USD", "EUR", "GBP", "JPY"];
 const CURRENCY_SYMBOLS = { INR: "₹", USD: "$", EUR: "€", GBP: "£", JPY: "¥" };
 
-/* ─── tiny shared UI atoms ───────────────────────────── */
+
 const FieldLabel = ({ children }) => (
   <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-1.5 ml-0.5">
     {children}
@@ -61,7 +61,7 @@ const SectionHeader = ({ icon: Icon, label }) => (
   </div>
 );
 
-/* ─── main component ─────────────────────────────────── */
+
 const CreateProducts = () => {
   const navigate = useNavigate();
   const { handlecreateproduct, loading, error, success } = useproduct();
@@ -72,19 +72,18 @@ const CreateProducts = () => {
     amount: "",
     currency: "INR",
   });
-  // Each entry: { file: File, preview: objectURL }
+
   const [images, setImages] = useState([]);
   const [errors, setErrors] = useState({});
   const fileInputRef = React.useRef(null);
 
-  /* ── field change ── */
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  /* ── image file picker ── */
   const handleFilePick = (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
@@ -95,7 +94,7 @@ const CreateProducts = () => {
 
     setImages((prev) => [...prev, ...newImages]);
     setErrors((prev) => ({ ...prev, images: "" }));
-    // reset input so same file can be re-added if removed
+
     e.target.value = "";
   };
 
@@ -107,31 +106,29 @@ const CreateProducts = () => {
     });
   };
 
-  /* ── validation ── */
+
   const validate = () => {
     const e = {};
-    if (!form.title.trim())       e.title       = "Product title is required";
+    if (!form.title.trim()) e.title = "Product title is required";
     if (!form.description.trim()) e.description = "Description is required";
     if (!form.amount || Number(form.amount) <= 0)
-                                  e.amount      = "Enter a valid price";
-    if (images.length === 0)      e.images      = "Add at least one product image";
+      e.amount = "Enter a valid price";
+    if (images.length === 0) e.images = "Add at least one product image";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  /* ── submit ── */
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // Build FormData so image Files can be sent as multipart
     const fd = new FormData();
     fd.append("title", form.title);
     fd.append("description", form.description);
-    fd.append("price[amount]", Number(form.amount));
-    fd.append("price[currency]", form.currency);
+    fd.append("priceamount", Number(form.amount));
+    fd.append("pricecurrency", form.currency);
     images.forEach((img) => fd.append("images", img.file));
-
     const result = await handlecreateproduct(fd);
     if (result?.success) {
       // revoke all object URLs on success
@@ -140,18 +137,15 @@ const CreateProducts = () => {
     }
   };
 
-  /* ── render ── */
+ 
   return (
     <div className="min-h-screen bg-[#07080c] text-zinc-100 flex flex-col relative overflow-hidden bg-mesh">
 
-      {/* ambient glow orbs */}
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/8 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
       <div
         className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-500/8 rounded-full blur-3xl pointer-events-none animate-pulse-subtle"
         style={{ animationDelay: "4s" }}
       />
-
-      {/* ── top bar ────────────────────────────────────── */}
       <header className="relative z-10 flex items-center gap-4 px-5 sm:px-8 py-5 border-b border-zinc-800/60 backdrop-blur-sm">
         <button
           type="button"
@@ -333,11 +327,10 @@ const CreateProducts = () => {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`w-full flex flex-col items-center justify-center gap-2 py-8 rounded-xl border border-dashed transition-all duration-200 cursor-pointer group ${
-                  errors.images
+                className={`w-full flex flex-col items-center justify-center gap-2 py-8 rounded-xl border border-dashed transition-all duration-200 cursor-pointer group ${errors.images
                     ? "border-red-500/50 bg-red-500/5"
                     : "border-zinc-700/60 hover:border-amber-400/40 hover:bg-amber-400/[0.03] bg-zinc-950/30"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800/80 border border-zinc-700/60 group-hover:border-amber-400/30 group-hover:bg-amber-400/10 transition-all duration-200">
                   <Upload className="w-4 h-4 text-zinc-500 group-hover:text-amber-400 transition-colors duration-200" />
@@ -453,4 +446,4 @@ const CreateProducts = () => {
   );
 };
 
-export default CreateProducts;
+export default CreateProducts; 

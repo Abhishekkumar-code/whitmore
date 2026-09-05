@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createproduct as createproductApi } from "../services/product.api";
+import { createproduct as createproductApi , getseller as sellerproductApi } from "../services/product.api";
 import { setSellerProducts } from "../product.slice";
 
 export const useproduct = () => {
@@ -33,12 +33,35 @@ export const useproduct = () => {
             setLoading(false);
         }
     };
+
+    const handlegetsellerproducts = async ()=>{
+  try {
+            setLoading(true);
+            setError(null);
+            setSuccess(false);
+
+            const data = await sellerproductApi()
+
+            return data.product
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Failed to seen the Products.";
+            setError(msg);
+            return { success: false, error: msg };
+        } finally {
+            setLoading(false);
+        }
+
+    }
     
     return {
         loading,
         error,
         success,
         handlecreateproduct,
+        handlegetsellerproducts,
         clearError: () => setError(null),
     };
 };

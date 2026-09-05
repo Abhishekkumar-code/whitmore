@@ -6,7 +6,8 @@ import upload from "../middleware/upload.middleware.js";
 const productrouter = Router();
 
 
-productrouter.post("/",authticateseller,createProductValidator,upload.array("images",4),createproduct)
 
+productrouter.post("/",authticateseller,upload.array("images", 7),createProductValidator,createproduct
+)
 productrouter.get("/seller",authticateseller,getsellerproducts)
 export default productrouter;

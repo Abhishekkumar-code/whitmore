@@ -88,11 +88,11 @@ export const googleCallback = async (req, res) => {
   const {id,displayName,emails,photos} = req.user;
   const email = emails[0].value;
   const profilepic = photos[0].value;
-  const user = await usermodel.findOne({email})
+  let user = await usermodel.findOne({email})
         
-        let createuser;
+      
     if(!user){
-            createuser = await usermodel.create({
+            user = await usermodel.create({
             email,
             googleId:id,
             fullname:displayName,
@@ -100,7 +100,7 @@ export const googleCallback = async (req, res) => {
     }
 
     const token = jwt.sign({
-        id:createuser._id
+        id:user.id
     },config.JWT_SECRET,{
         expiresIn:"7d"
     })
