@@ -8,8 +8,7 @@ import passport from "passport"
 const authrouter = Router()
 
 authrouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }))
-authrouter.get("/google/callback",passport.authenticate("google", { session: false,failureRedirect: "/login", }),googleCallback
-);
+authrouter.get("/google/callback",passport.authenticate("google", { session: false,failureRedirect: "/login", }),googleCallback);
 authrouter.post("/register", registerValidator, authcontrollerregister)
 authrouter.post("/login", loginValidator, authcontrollerlogin)
 export default authrouter;

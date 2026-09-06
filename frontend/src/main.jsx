@@ -5,10 +5,10 @@ import { store } from './app/app.store.js'
 import App from './app/App.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <Provider store={store}>
       <App />
     </Provider>
-  </StrictMode>,
-)
+  
 
+)

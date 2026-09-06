@@ -41,7 +41,7 @@ export const useproduct = () => {
             setSuccess(false);
 
             const data = await sellerproductApi()
-
+              dispatch(setSellerProducts(data.product));
             return data.product
         } catch (err) {
             const msg =

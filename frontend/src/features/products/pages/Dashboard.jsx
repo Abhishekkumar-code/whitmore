@@ -4,12 +4,13 @@ import { useSelector } from "react-redux";
 
 const Dashboard = () => {
 
-  const { handlegetsellerproduct } = useproduct()
+  const { handlegetsellerproducts} = useproduct()
 
-  const sellerproducts = useSelector(state => state.product.sellerproducts)
+  const sellerproducts = useSelector(state => state.product.sellerProducts)
   useEffect(() => {
-    handlegetsellerproduct()
+  handlegetsellerproducts()
   }, [])
+
   console.log(sellerproducts);
 
   return (

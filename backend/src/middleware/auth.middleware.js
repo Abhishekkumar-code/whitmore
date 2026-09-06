@@ -14,9 +14,7 @@ export const authticateseller= async (req,res,next)=>{
     const decoded = jwt.verify(token,config.JWT_SECRET)
     const user = await usermodel.findById(decoded.id)
 
-    console.log("Decoded:", decoded)
-console.log("User:", user)
-console.log("User role:", user.role)
+
     if(!user){
         return res.status(401).json({
             message:"Unauthorized "

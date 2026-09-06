@@ -41,8 +41,8 @@ export async function getsellerproducts(req,res){
 
     const product = await productmodel.find({seller:seller._id});
   return res.status(200).json({
-    message:"product created succesfully ",
-    success:"false",
+    message:"product fetched succesfully ",
+    success:"true",
     product
   })
 }

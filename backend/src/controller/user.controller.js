@@ -96,6 +96,7 @@ export const googleCallback = async (req, res) => {
             email,
             googleId:id,
             fullname:displayName,
+            profilepic
         })
     }
 
