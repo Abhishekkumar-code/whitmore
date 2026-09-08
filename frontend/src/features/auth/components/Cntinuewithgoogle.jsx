@@ -2,7 +2,7 @@ import React from 'react';
 
 const GoogleIcon = () => (
   <svg
-    className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
+    className="w-4.5 h-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -29,15 +29,10 @@ const Cntinuewithgoogle = ({ text = "Continue with Google", href = "http://local
   return (
     <a
       href={href}
-      className="w-full relative group flex items-center justify-center gap-3 px-4 py-2.5 sm:py-3 rounded-xl bg-zinc-950/60 hover:bg-zinc-900/90 border border-zinc-800 hover:border-amber-400/40 text-zinc-200 hover:text-white text-xs sm:text-sm font-medium tracking-wide transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-amber-500/5 focus:outline-none focus:ring-2 focus:ring-amber-400/20 active:scale-[0.99] select-none"
+      className="w-full relative group flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-200 hover:border-neutral-300 text-neutral-800 text-xs font-semibold tracking-wide transition-all duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-black/10 active:scale-[0.99] select-none"
     >
-      <div className="p-1 rounded-lg bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors flex items-center justify-center">
-        <GoogleIcon />
-      </div>
-      <span className="font-semibold">{text}</span>
-      
-      {/* Subtle shine highlight on hover */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-amber-400/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <GoogleIcon />
+      <span>{text}</span>
     </a>
   );
 };

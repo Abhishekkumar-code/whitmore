@@ -20,7 +20,7 @@ async function sendTokenResponse(user,res,message){
             email:user.email,
             contact:user.contact,
             fullname:user.fullname,
-          
+              role: user.role
         }
     })
 
@@ -47,7 +47,7 @@ export async function authcontrollerregister(req,res){
         contact,
         password,
         fullname,
-        role:isSeller ?"Seller":"Buyer"
+        role:isSeller ?"seller":"buyer"
      })
 
 
@@ -108,4 +108,20 @@ export const googleCallback = async (req, res) => {
 
     res.cookie("token",token)
     res.redirect("http://localhost:5173")
+}
+
+export const getme = async(req,res)=>{
+    const user = req.user;
+
+    res.status(200).json({
+        message:"user Fetched Succesfully",
+        success:true,
+        user:{
+            id:user._id,
+            email:user.email,
+            contact:user.contact,
+            fullname:user.fullname,
+            role:user.role
+        }
+    })
 }

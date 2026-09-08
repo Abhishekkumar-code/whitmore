@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
 
     }, role: {
         type: String,
-        enum: ["Buyer", "Seller"],
+        enum: ["buyer", "seller"],
         default: "Buyer"
     },
     googleId: {

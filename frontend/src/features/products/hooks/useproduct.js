@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createproduct as createproductApi , getseller as sellerproductApi } from "../services/product.api";
-import { setSellerProducts } from "../product.slice";
+import { createproduct as createproductApi, getseller as sellerproductApi, getallproducts as getallproductsApi } from "../services/product.api";
+import { setSellerProducts, setallproducts } from "../product.slice";
 
 export const useproduct = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const [error, setError]     = useState(null);
+    const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
     const handlecreateproduct = async (formData) => {
@@ -34,14 +34,14 @@ export const useproduct = () => {
         }
     };
 
-    const handlegetsellerproducts = async ()=>{
-  try {
+    const handlegetsellerproducts = async () => {
+        try {
             setLoading(true);
             setError(null);
             setSuccess(false);
 
             const data = await sellerproductApi()
-              dispatch(setSellerProducts(data.product));
+            dispatch(setSellerProducts(data.product));
             return data.product
         } catch (err) {
             const msg =
@@ -55,15 +55,38 @@ export const useproduct = () => {
         }
 
     }
-    
-    return {
-        loading,
-        error,
-        success,
-        handlecreateproduct,
-        handlegetsellerproducts,
-        clearError: () => setError(null),
+
+    const handleallproducts = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await getallproductsApi();
+            const productsList = data.allproducts || [];
+            dispatch(setallproducts(productsList));
+            return productsList;
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Failed to fetch products. Please try again.";
+            setError(msg);
+            return { success: false, error: msg };
+        } finally {
+            setLoading(false);
+        }
     };
+
+     
+
+return {
+    loading,
+    error,
+    success,
+    handlecreateproduct,
+    handlegetsellerproducts,
+    handleallproducts,
+    clearError: () => setError(null),
+};
 };
 
 export default useproduct;

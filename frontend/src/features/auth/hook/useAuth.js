@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { register as registerApi, login as loginApi } from "../service/auth.api";
+import { register as registerApi, login as loginApi, getme } from "../service/auth.api";
 import { setUser, setLoading, setError } from "../auth.slice";
 
 export const useAuth = () => {
@@ -20,11 +20,12 @@ export const useAuth = () => {
 
       const data = await registerApi({ fullname, email, contact, password, isSeller });
 
-      dispatch(setUser(data.user || data));
+      const userData = data.user || data;
+      dispatch(setUser(userData));
       dispatch(setLoading(false));
       setLocalLoading(false);
       setSuccess(true);
-      return { success: true, data };
+      return { success: true, user: userData, data };
     } catch (err) {
       const errorMessage = err?.response?.data?.message || err?.message || "Registration failed. Please try again.";
       setLocalError(errorMessage);
@@ -45,11 +46,12 @@ export const useAuth = () => {
 
       const data = await loginApi({ email, password });
 
-      dispatch(setUser(data.user || data));
+      const userData = data.user || data;
+      dispatch(setUser(userData));
       dispatch(setLoading(false));
       setLocalLoading(false);
       setSuccess(true);
-      return { success: true, data };
+      return { success: true, user: userData, data };
     } catch (err) {
       const errorMessage = err?.response?.data?.message || err?.message || "Login failed. Please enter valid credentials.";
       setLocalError(errorMessage);
@@ -60,6 +62,27 @@ export const useAuth = () => {
     }
   };
 
+  const handlegetme = async()=>{
+    try{
+          dispatch(setLoading(true))
+      const data = await getme()
+      dispatch(setUser(data.user))
+
+    }
+    
+    catch(err){
+      
+      console.log(err)
+    }
+    
+    finally{
+
+    dispatch(setLoading(false))
+    }
+  
+  }
+
+
   return {
     user,
     loading: localLoading || reduxLoading || false,
@@ -67,6 +90,7 @@ export const useAuth = () => {
     success,
     handleRegister,
     handleLogin,
+    handlegetme,
     clearError: () => {
       setLocalError(null);
       dispatch(setError(null));

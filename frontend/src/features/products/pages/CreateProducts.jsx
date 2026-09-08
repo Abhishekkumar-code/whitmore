@@ -17,33 +17,31 @@ import {
 } from "lucide-react";
 import { useproduct } from "../hooks/useproduct";
 
-
 const CURRENCIES = ["INR", "USD", "EUR", "GBP", "JPY"];
 const CURRENCY_SYMBOLS = { INR: "₹", USD: "$", EUR: "€", GBP: "£", JPY: "¥" };
 
-
 const FieldLabel = ({ children }) => (
-  <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-500 mb-1.5 ml-0.5">
+  <span className="block text-[11px] font-extrabold uppercase tracking-wider text-neutral-600 mb-1.5 ml-0.5">
     {children}
   </span>
 );
 
 const IconSlot = ({ children }) => (
-  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-600 group-focus-within:text-amber-400 transition-colors duration-200">
+  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors duration-200">
     {children}
   </div>
 );
 
 const baseInput =
-  "w-full bg-zinc-950/60 border border-zinc-800/90 hover:border-zinc-700 " +
-  "focus:border-amber-400/70 focus:ring-2 focus:ring-amber-400/10 rounded-xl " +
-  "text-zinc-100 placeholder:text-zinc-600 focus:outline-none transition-all duration-200 text-sm";
+  "w-full bg-white border border-neutral-200 hover:border-neutral-300 " +
+  "focus:border-neutral-900 focus:ring-2 focus:ring-black/5 rounded-xl " +
+  "text-neutral-900 placeholder:text-neutral-400 focus:outline-none transition-all duration-200 text-sm shadow-sm";
 
-const errInput = "border-red-500/60 focus:border-red-500";
+const errInput = "border-red-500 focus:border-red-500 focus:ring-red-500/10";
 
 const ErrorMsg = ({ msg }) =>
   msg ? (
-    <p className="text-[11px] text-red-400 mt-1.5 ml-0.5 flex items-center gap-1">
+    <p className="text-[11px] text-red-600 font-medium mt-1.5 ml-0.5 flex items-center gap-1">
       <AlertCircle className="w-3 h-3 shrink-0" />
       {msg}
     </p>
@@ -51,16 +49,15 @@ const ErrorMsg = ({ msg }) =>
 
 const SectionHeader = ({ icon: Icon, label }) => (
   <div className="flex items-center gap-2.5 mb-5">
-    <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-400/10 border border-amber-400/20">
-      <Icon className="w-3.5 h-3.5 text-amber-400" />
+    <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-neutral-900 text-white shadow-sm">
+      <Icon className="w-3.5 h-3.5" />
     </div>
-    <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+    <span className="text-[11px] font-extrabold uppercase tracking-widest text-neutral-500">
       {label}
     </span>
-    <div className="flex-1 h-px bg-zinc-800/80" />
+    <div className="flex-1 h-px bg-neutral-200" />
   </div>
 );
-
 
 const CreateProducts = () => {
   const navigate = useNavigate();
@@ -76,7 +73,6 @@ const CreateProducts = () => {
   const [images, setImages] = useState([]);
   const [errors, setErrors] = useState({});
   const fileInputRef = React.useRef(null);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,7 +102,6 @@ const CreateProducts = () => {
     });
   };
 
-
   const validate = () => {
     const e = {};
     if (!form.title.trim()) e.title = "Product title is required";
@@ -117,7 +112,6 @@ const CreateProducts = () => {
     setErrors(e);
     return Object.keys(e).length === 0;
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -131,86 +125,73 @@ const CreateProducts = () => {
     images.forEach((img) => fd.append("images", img.file));
     const result = await handlecreateproduct(fd);
     if (result?.success) {
-      // revoke all object URLs on success
       images.forEach((img) => URL.revokeObjectURL(img.preview));
       setTimeout(() => navigate("/"), 1400);
     }
   };
 
- 
   return (
-    <div className="min-h-screen bg-[#07080c] text-zinc-100 flex flex-col relative overflow-hidden bg-mesh">
+    <div className="min-h-screen bg-[#FBF9F5] text-neutral-900 flex flex-col font-sans selection:bg-neutral-900 selection:text-white">
+      <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white/80 backdrop-blur-md px-4 sm:px-8 py-4 shadow-sm">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              aria-label="Go back"
+              className="flex items-center justify-center w-9 h-9 rounded-xl border border-neutral-200 bg-white text-neutral-600 hover:text-black hover:border-neutral-400 transition-all cursor-pointer shadow-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
 
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/8 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
-      <div
-        className="absolute -bottom-40 -right-40 w-96 h-96 bg-yellow-500/8 rounded-full blur-3xl pointer-events-none animate-pulse-subtle"
-        style={{ animationDelay: "4s" }}
-      />
-      <header className="relative z-10 flex items-center gap-4 px-5 sm:px-8 py-5 border-b border-zinc-800/60 backdrop-blur-sm">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          aria-label="Go back"
-          className="flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-zinc-100 hover:border-zinc-600 transition-all duration-200 cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </button>
-
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg font-bold tracking-tight text-white">
-              Create Product
-            </h1>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-[10px] font-semibold tracking-wide">
-              <Sparkles className="w-2.5 h-2.5" />
-              New Listing
-            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-extrabold tracking-tight text-neutral-900 uppercase">
+                  New Product Listing
+                </h1>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-800 text-[10px] font-extrabold tracking-widest uppercase">
+                  <Sparkles className="w-3 h-3 text-amber-600" />
+                  Atelier
+                </span>
+              </div>
+              <p className="text-xs text-neutral-500 mt-0.5">
+                Publish a new item to your Whitmore storefront
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-zinc-500 mt-0.5">
-            Fill in the details below to publish a new product.
-          </p>
         </div>
       </header>
 
-      {/* ── body ───────────────────────────────────────── */}
-      <main className="relative z-10 flex-1 flex justify-center px-4 py-8 sm:py-10">
+      <main className="flex-1 flex justify-center px-4 py-8 sm:py-12">
         <div className="w-full max-w-2xl">
-
-          {/* success banner */}
           {success && (
-            <div className="mb-6 p-3.5 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 text-emerald-800">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <div className="text-xs">
-                <p className="font-semibold text-amber-300">Product Published!</p>
-                <p className="text-amber-200/70 mt-0.5">Redirecting you now…</p>
+                <p className="font-extrabold">Product Published!</p>
+                <p className="text-emerald-700 mt-0.5">Redirecting to home page...</p>
               </div>
             </div>
           )}
 
-          {/* api error banner */}
           {error && (
-            <div className="mb-6 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3 text-red-800">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <div className="text-xs">
-                <p className="font-semibold text-red-200">Something went wrong</p>
-                <p className="text-red-300/90 mt-0.5">{error}</p>
+                <p className="font-extrabold">Something went wrong</p>
+                <p className="text-red-700 mt-0.5">{error}</p>
               </div>
             </div>
           )}
 
-          {/* ── card ─────────────────────────────────── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl space-y-8"
+            className="bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-xl space-y-8"
           >
-
-            {/* ─── Section 1 · Product Details ─── */}
             <section>
               <SectionHeader icon={Layers} label="Product Details" />
 
               <div className="space-y-5">
-
-                {/* title */}
                 <div>
                   <FieldLabel>Product Title</FieldLabel>
                   <div className="relative group">
@@ -219,46 +200,41 @@ const CreateProducts = () => {
                       id="title"
                       name="title"
                       type="text"
-                      placeholder="e.g. Handcrafted Leather Wallet"
+                      placeholder="e.g. Oversized Cotton Heavyweight Tee"
                       value={form.title}
                       onChange={handleChange}
-                      className={`${baseInput} pl-10 pr-4 py-2.5 ${errors.title ? errInput : ""}`}
+                      className={`${baseInput} pl-10 pr-4 py-3 ${errors.title ? errInput : ""}`}
                     />
                   </div>
                   <ErrorMsg msg={errors.title} />
                 </div>
 
-                {/* description */}
                 <div>
                   <FieldLabel>Description</FieldLabel>
                   <div className="relative group">
-                    <div className="absolute top-3 left-0 pl-3.5 pointer-events-none text-zinc-600 group-focus-within:text-amber-400 transition-colors duration-200">
+                    <div className="absolute top-3.5 left-0 pl-3.5 pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors">
                       <AlignLeft className="w-4 h-4" />
                     </div>
                     <textarea
                       id="description"
                       name="description"
                       rows={4}
-                      placeholder="Describe your product — materials, dimensions, use case…"
+                      placeholder="Describe your product — fit, fabric weight, care instructions..."
                       value={form.description}
                       onChange={handleChange}
-                      className={`${baseInput} pl-10 pr-4 py-2.5 resize-none leading-relaxed ${errors.description ? errInput : ""}`}
+                      className={`${baseInput} pl-10 pr-4 py-3 resize-none leading-relaxed ${errors.description ? errInput : ""}`}
                     />
                   </div>
                   <ErrorMsg msg={errors.description} />
                 </div>
-
               </div>
             </section>
 
-            {/* ─── Section 2 · Pricing ─── */}
             <section>
               <SectionHeader icon={Tag} label="Pricing" />
 
-              <div className="flex gap-3">
-
-                {/* currency */}
-                <div className="w-36 shrink-0">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-full sm:w-36 shrink-0">
                   <FieldLabel>Currency</FieldLabel>
                   <div className="relative">
                     <select
@@ -266,16 +242,15 @@ const CreateProducts = () => {
                       name="currency"
                       value={form.currency}
                       onChange={handleChange}
-                      className="w-full bg-zinc-950/60 border border-zinc-800/90 hover:border-zinc-700 focus:border-amber-400/70 focus:ring-2 focus:ring-amber-400/10 rounded-xl text-zinc-100 focus:outline-none transition-all duration-200 text-sm pl-3.5 pr-8 py-2.5 appearance-none cursor-pointer"
+                      className="w-full bg-white border border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 focus:ring-2 focus:ring-black/5 rounded-xl text-neutral-900 text-sm font-semibold focus:outline-none transition-all pl-3.5 pr-8 py-3 appearance-none cursor-pointer shadow-sm"
                     >
                       {CURRENCIES.map((c) => (
-                        <option key={c} value={c} className="bg-zinc-900">
+                        <option key={c} value={c} className="bg-white text-neutral-900">
                           {CURRENCY_SYMBOLS[c]} {c}
                         </option>
                       ))}
                     </select>
-                    {/* chevron */}
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-500">
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400">
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
@@ -283,12 +258,10 @@ const CreateProducts = () => {
                   </div>
                 </div>
 
-                {/* amount */}
                 <div className="flex-1">
                   <FieldLabel>Price Amount</FieldLabel>
                   <div className="relative group">
-                    {/* dynamic currency symbol — updates with the dropdown */}
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-amber-400 transition-colors duration-200 text-sm font-semibold">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors text-sm font-extrabold">
                       {CURRENCY_SYMBOLS[form.currency]}
                     </div>
                     <input
@@ -300,20 +273,17 @@ const CreateProducts = () => {
                       placeholder="0.00"
                       value={form.amount}
                       onChange={handleChange}
-                      className={`${baseInput} pl-8 pr-4 py-2.5 ${errors.amount ? errInput : ""}`}
+                      className={`${baseInput} pl-8 pr-4 py-3 ${errors.amount ? errInput : ""}`}
                     />
                   </div>
                   <ErrorMsg msg={errors.amount} />
                 </div>
-
               </div>
             </section>
 
-            {/* ─── Section 3 · Images ─── */}
             <section>
-              <SectionHeader icon={ImagePlus} label="Product Images" />
+              <SectionHeader icon={ImagePlus} label="Product Imagery" />
 
-              {/* hidden native file input — accepts multiple images */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -323,92 +293,83 @@ const CreateProducts = () => {
                 onChange={handleFilePick}
               />
 
-              {/* upload trigger */}
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`w-full flex flex-col items-center justify-center gap-2 py-8 rounded-xl border border-dashed transition-all duration-200 cursor-pointer group ${errors.images
-                    ? "border-red-500/50 bg-red-500/5"
-                    : "border-zinc-700/60 hover:border-amber-400/40 hover:bg-amber-400/[0.03] bg-zinc-950/30"
-                  }`}
+                className={`w-full flex flex-col items-center justify-center gap-2.5 py-10 rounded-2xl border-2 border-dashed transition-all cursor-pointer group ${
+                  errors.images
+                    ? "border-red-400 bg-red-50/50"
+                    : "border-neutral-300 hover:border-neutral-900 bg-[#FBF9F5] hover:bg-neutral-100/50"
+                }`}
               >
-                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800/80 border border-zinc-700/60 group-hover:border-amber-400/30 group-hover:bg-amber-400/10 transition-all duration-200">
-                  <Upload className="w-4 h-4 text-zinc-500 group-hover:text-amber-400 transition-colors duration-200" />
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white border border-neutral-200 group-hover:border-neutral-900 shadow-sm transition-all">
+                  <Upload className="w-5 h-5 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-medium text-zinc-400 group-hover:text-zinc-300 transition-colors">
-                    Click to select images
+                  <p className="text-sm font-bold text-neutral-900 uppercase tracking-wider">
+                    Click to upload images
                   </p>
-                  <p className="text-xs text-zinc-600 mt-0.5">
-                    PNG, JPG, WEBP — multiple allowed
+                  <p className="text-xs text-neutral-500 mt-1">
+                    High resolution PNG, JPG, WEBP — multiple allowed
                   </p>
                 </div>
               </button>
 
               <ErrorMsg msg={errors.images} />
 
-              {/* image preview grid */}
               {images.length > 0 && (
-                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {images.map((img, idx) => (
                     <div
                       key={img.preview}
-                      className="relative group/card rounded-xl overflow-hidden border border-zinc-800/60 hover:border-zinc-700/60 transition-all duration-150 aspect-square bg-zinc-900"
+                      className="relative group rounded-2xl overflow-hidden border border-neutral-200 aspect-square bg-neutral-100 shadow-sm"
                     >
-                      {/* preview thumbnail */}
                       <img
                         src={img.preview}
                         alt={img.file.name}
                         className="w-full h-full object-cover"
                       />
 
-                      {/* dark overlay on hover */}
-                      <div className="absolute inset-0 bg-black/0 group-hover/card:bg-black/40 transition-all duration-200" />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                      {/* cover badge */}
                       {idx === 0 && (
-                        <span className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-400/90 text-zinc-900">
-                          Cover
+                        <span className="absolute top-2.5 left-2.5 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-neutral-900 text-white shadow-md">
+                          Main Cover
                         </span>
                       )}
 
-                      {/* filename */}
-                      <div className="absolute bottom-0 inset-x-0 px-2 py-1.5 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-200">
-                        <p className="text-[10px] text-zinc-300 truncate">{img.file.name}</p>
+                      <div className="absolute bottom-0 inset-x-0 px-2.5 py-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-[10px] text-white truncate font-medium">{img.file.name}</p>
                       </div>
 
-                      {/* remove button */}
                       <button
                         type="button"
                         onClick={() => removeImage(img.preview)}
                         aria-label="Remove image"
-                        className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 rounded-full bg-black/60 text-zinc-300 hover:text-white hover:bg-red-500/80 transition-all duration-150 cursor-pointer opacity-0 group-hover/card:opacity-100"
+                        className="absolute top-2.5 right-2.5 flex items-center justify-center w-7 h-7 rounded-full bg-black/70 text-white hover:bg-red-600 transition-all cursor-pointer opacity-0 group-hover:opacity-100 shadow-md"
                       >
-                        <X className="w-3 h-3" />
+                        <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   ))}
 
-                  {/* add more tile */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-zinc-700/60 hover:border-amber-400/40 hover:bg-amber-400/[0.03] aspect-square text-zinc-600 hover:text-amber-400 transition-all duration-200 cursor-pointer"
+                    className="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-neutral-300 hover:border-neutral-900 bg-[#FBF9F5] hover:bg-neutral-100 aspect-square text-neutral-500 hover:text-neutral-900 transition-all cursor-pointer"
                   >
-                    <Upload className="w-4 h-4" />
-                    <span className="text-[10px] font-medium">Add more</span>
+                    <Upload className="w-5 h-5" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Add More</span>
                   </button>
                 </div>
               )}
             </section>
 
-            {/* ─── Actions ─── */}
-            <div className="flex items-center gap-3 pt-2 border-t border-zinc-800/60">
-
+            <div className="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-neutral-200">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="px-6 py-2.5 rounded-xl border border-zinc-700/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all duration-200 text-sm font-medium cursor-pointer"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl border border-neutral-300 text-neutral-700 hover:text-black hover:border-neutral-400 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer text-center"
               >
                 Cancel
               </button>
@@ -416,34 +377,26 @@ const CreateProducts = () => {
               <button
                 type="submit"
                 disabled={loading || success}
-                className="flex-1 relative group overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-amber-400/30 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full sm:flex-1 py-3.5 px-6 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all disabled:opacity-60 cursor-pointer active:scale-[0.99]"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-xl transition-all duration-300 group-hover:scale-105" />
-                <div className="relative px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-400 text-zinc-950 font-bold text-sm tracking-wide flex items-center justify-center gap-2 transition-all duration-200 group-hover:brightness-105 shadow-md shadow-amber-500/20">
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Publishing…</span>
-                    </>
-                  ) : (
-                    <>
-                      <PackagePlus className="w-4 h-4" />
-                      <span>Publish Product</span>
-                    </>
-                  )}
-                </div>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Publishing...</span>
+                  </>
+                ) : (
+                  <>
+                    <PackagePlus className="w-4 h-4" />
+                    <span>Publish Product Listing</span>
+                  </>
+                )}
               </button>
-
             </div>
           </form>
-
-          <p className="text-center text-[11px] text-zinc-700 mt-5">
-            All listings are reviewed before going live · Powered by Whitmore
-          </p>
         </div>
       </main>
     </div>
   );
 };
 
-export default CreateProducts; 
+export default CreateProducts;

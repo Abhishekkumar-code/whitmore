@@ -11,8 +11,8 @@ import {
   ArrowRight, 
   CheckCircle2, 
   AlertCircle, 
-  Sparkles,
-  Loader2
+  Loader2,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../hook/useAuth';
 import Cntinuewithgoogle from '../components/Cntinuewithgoogle';
@@ -92,165 +92,180 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-zinc-100 flex items-center justify-center p-3 sm:p-4 lg:p-6 relative overflow-hidden bg-mesh">
-      {/* Golden ambient background lights */}
-      <div className="absolute -top-32 -left-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
-      <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" style={{ animationDelay: '3s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-400/[0.02] rounded-full blur-3xl pointer-events-none" />
-
-      {/* Main Container - Compact Professional Layout */}
-      <div className="w-full max-w-2xl relative z-10 my-auto">
-        {/* Top subtle badge */}
-        <div className="flex justify-center mb-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900/80 border border-amber-400/20 text-amber-300 text-xs font-medium backdrop-blur-md shadow-sm">
-            <Sparkles className="w-3 h-3 text-amber-400" />
-            <span>Join Our Exclusive Platform</span>
+    <div className="min-h-screen w-full bg-[#FBF9F5] text-neutral-900 grid grid-cols-1 lg:grid-cols-2 font-sans selection:bg-neutral-900 selection:text-white">
+      <div className="relative hidden lg:block h-full min-h-screen overflow-hidden bg-neutral-900">
+        <img 
+          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1400&auto=format&fit=crop" 
+          alt="Whitmore Runway Collection" 
+          className="w-full h-full object-cover opacity-90 scale-105 hover:scale-100 transition-transform duration-1000 ease-out"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+        
+        <div className="absolute inset-0 p-12 flex flex-col justify-between text-white z-10">
+          <div className="flex items-center justify-between">
+            <span className="text-xl font-black tracking-widest uppercase">WHITMORE</span>
+            <span className="text-[10px] tracking-widest uppercase px-3 py-1 rounded-full border border-white/30 backdrop-blur-md">
+              JOIN THE MOVEMENT
+            </span>
           </div>
-        </div>
 
-        {/* Card */}
-        <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 hover:border-amber-500/20 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl transition-all duration-300">
-          
-          {/* Header */}
-          <div className="text-center mb-4 sm:mb-5">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-1">
-              Create an account
-            </h1>
-            <p className="text-zinc-400 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-              Experience seamless commerce with bespoke tools for buyers and sellers.
+          <div className="max-w-md space-y-4">
+            <span className="text-xs uppercase font-bold tracking-widest text-amber-300 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              CREATE YOUR ACCOUNT
+            </span>
+            <h2 className="text-4xl font-extrabold tracking-tight leading-tight">
+              Join Thousands of Creators & Fashion Enthusiasts.
+            </h2>
+            <p className="text-neutral-300 text-sm leading-relaxed font-light">
+              Experience seamless buying, storefront management, and high-end marketplace curation.
             </p>
           </div>
 
-          {/* Success Banner */}
+          <div className="pt-6 border-t border-white/15 flex items-center justify-between text-xs text-neutral-400">
+            <span>© 2026 WHITMORE INC.</span>
+            <span>ELEVATED DESIGN</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col justify-center items-center px-6 py-10 sm:px-12 lg:px-16 bg-[#FBF9F5]">
+        <div className="w-full max-w-lg space-y-6">
+          <div className="space-y-2">
+            <div className="lg:hidden mb-4">
+              <span className="text-xl font-black tracking-widest uppercase text-neutral-900">WHITMORE</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900">
+              Create an Account
+            </h1>
+            <p className="text-neutral-500 text-sm">
+              Sign up today to explore curated collections or start selling.
+            </p>
+          </div>
+
           {success && (
-            <div className="mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-start gap-2.5 text-amber-200">
-              <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 text-emerald-800">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <div className="text-xs">
-                <p className="font-semibold text-amber-300">Registration Successful!</p>
-                <p className="text-amber-200/80 mt-0.5">Your account has been created. Redirecting to login...</p>
+                <p className="font-bold">Account Created Successfully!</p>
+                <p className="text-emerald-700 mt-0.5">Redirecting to login screen...</p>
               </div>
             </div>
           )}
 
-          {/* Error Banner */}
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-start gap-2.5 text-red-300">
-              <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3 text-red-800">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <div className="text-xs">
-                <p className="font-semibold text-red-200">Registration Error</p>
-                <p className="text-red-300/90 mt-0.5">{error}</p>
+                <p className="font-bold">Registration Error</p>
+                <p className="text-red-700 mt-0.5">{error}</p>
               </div>
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
-            
-            {/* 2-Column Grid on Desktop */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
-              {/* Full Name */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label 
                   htmlFor="fullname" 
-                  className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 ml-1"
+                  className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 ml-0.5"
                 >
                   Full Name
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-amber-400 transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors">
                     <User className="w-4 h-4" />
                   </div>
                   <input
                     id="fullname"
                     name="fullname"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Abhishek Kumar"
                     value={formData.fullname}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-3.5 py-2.5 bg-zinc-950/60 border ${
+                    className={`w-full pl-10 pr-3.5 py-2.5 bg-white border ${
                       formErrors.fullname 
-                        ? 'border-red-500/60 focus:border-red-500' 
-                        : 'border-zinc-800/90 hover:border-zinc-700 focus:border-amber-400/70'
-                    } rounded-xl text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-amber-400/10 transition-all duration-200 text-xs sm:text-sm`}
+                        ? 'border-red-500 focus:ring-red-500/20' 
+                        : 'border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 focus:ring-black/5'
+                    } rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 transition-all text-xs sm:text-sm shadow-sm`}
                   />
                 </div>
                 {formErrors.fullname && (
-                  <p className="text-[11px] text-red-400 ml-1">{formErrors.fullname}</p>
+                  <p className="text-[11px] text-red-600 ml-0.5 font-medium">{formErrors.fullname}</p>
                 )}
               </div>
 
-              {/* Email Address */}
               <div className="space-y-1.5">
                 <label 
                   htmlFor="email" 
-                  className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 ml-1"
+                  className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 ml-0.5"
                 >
                   Email Address
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-amber-400 transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors">
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="john@example.com"
+                    placeholder="name@example.com"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-3.5 py-2.5 bg-zinc-950/60 border ${
+                    className={`w-full pl-10 pr-3.5 py-2.5 bg-white border ${
                       formErrors.email 
-                        ? 'border-red-500/60 focus:border-red-500' 
-                        : 'border-zinc-800/90 hover:border-zinc-700 focus:border-amber-400/70'
-                    } rounded-xl text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-amber-400/10 transition-all duration-200 text-xs sm:text-sm`}
+                        ? 'border-red-500 focus:ring-red-500/20' 
+                        : 'border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 focus:ring-black/5'
+                    } rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 transition-all text-xs sm:text-sm shadow-sm`}
                   />
                 </div>
                 {formErrors.email && (
-                  <p className="text-[11px] text-red-400 ml-1">{formErrors.email}</p>
+                  <p className="text-[11px] text-red-600 ml-0.5 font-medium">{formErrors.email}</p>
                 )}
               </div>
+            </div>
 
-              {/* Contact Number */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label 
                   htmlFor="contact" 
-                  className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 ml-1"
+                  className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 ml-0.5"
                 >
                   Contact Number
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-amber-400 transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors">
                     <Phone className="w-4 h-4" />
                   </div>
                   <input
                     id="contact"
                     name="contact"
                     type="tel"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="xxxxxxxxxxx"
                     value={formData.contact}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-3.5 py-2.5 bg-zinc-950/60 border ${
+                    className={`w-full pl-10 pr-3.5 py-2.5 bg-white border ${
                       formErrors.contact 
-                        ? 'border-red-500/60 focus:border-red-500' 
-                        : 'border-zinc-800/90 hover:border-zinc-700 focus:border-amber-400/70'
-                    } rounded-xl text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-amber-400/10 transition-all duration-200 text-xs sm:text-sm`}
+                        ? 'border-red-500 focus:ring-red-500/20' 
+                        : 'border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 focus:ring-black/5'
+                    } rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 transition-all text-xs sm:text-sm shadow-sm`}
                   />
                 </div>
                 {formErrors.contact && (
-                  <p className="text-[11px] text-red-400 ml-1">{formErrors.contact}</p>
+                  <p className="text-[11px] text-red-600 ml-0.5 font-medium">{formErrors.contact}</p>
                 )}
               </div>
 
-              {/* Password */}
               <div className="space-y-1.5">
                 <label 
                   htmlFor="password" 
-                  className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 ml-1"
+                  className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 ml-0.5"
                 >
                   Password
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-amber-400 transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-neutral-900 transition-colors">
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -260,16 +275,16 @@ const Register = () => {
                     placeholder="••••••••••••"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-10 py-2.5 bg-zinc-950/60 border ${
+                    className={`w-full pl-10 pr-10 py-2.5 bg-white border ${
                       formErrors.password 
-                        ? 'border-red-500/60 focus:border-red-500' 
-                        : 'border-zinc-800/90 hover:border-zinc-700 focus:border-amber-400/70'
-                    } rounded-xl text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-amber-400/10 transition-all duration-200 text-xs sm:text-sm`}
+                        ? 'border-red-500 focus:ring-red-500/20' 
+                        : 'border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 focus:ring-black/5'
+                    } rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 transition-all text-xs sm:text-sm shadow-sm`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-neutral-900 transition-colors cursor-pointer"
                     tabIndex={-1}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
@@ -281,18 +296,17 @@ const Register = () => {
                   </button>
                 </div>
                 {formErrors.password && (
-                  <p className="text-[11px] text-red-400 ml-1">{formErrors.password}</p>
+                  <p className="text-[11px] text-red-600 ml-0.5 font-medium">{formErrors.password}</p>
                 )}
               </div>
             </div>
 
-            {/* isSeller Checkbox Section - Clean & Standalone */}
             <label 
               htmlFor="isSeller"
-              className={`relative flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer select-none ${
+              className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all duration-200 cursor-pointer select-none ${
                 formData.isSeller 
-                  ? 'bg-amber-500/[0.07] border-amber-400/40 shadow-sm shadow-amber-500/10' 
-                  : 'bg-zinc-950/40 border-zinc-800/80 hover:border-zinc-700/80'
+                  ? 'bg-neutral-900 text-white border-neutral-900 shadow-md' 
+                  : 'bg-white border-neutral-200 hover:border-neutral-300 text-neutral-800'
               }`}
             >
               <input
@@ -301,82 +315,61 @@ const Register = () => {
                 type="checkbox"
                 checked={formData.isSeller}
                 onChange={handleChange}
-                className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-amber-400 focus:ring-amber-400/30 accent-amber-400 cursor-pointer shrink-0"
+                className="w-4 h-4 rounded border-neutral-300 text-neutral-900 focus:ring-black/20 accent-neutral-900 cursor-pointer shrink-0"
               />
               <div className="flex-1 flex items-center justify-between flex-wrap gap-1">
                 <div className="flex items-center gap-2">
-                  <Store className={`w-3.5 h-3.5 ${formData.isSeller ? 'text-amber-400' : 'text-zinc-400'} transition-colors`} />
-                  <span className="text-xs font-semibold text-zinc-200">
-                    Register as a Seller
-                  </span>
-                  <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20">
-                    Vendor
+                  <Store className={`w-4 h-4 ${formData.isSeller ? 'text-amber-300' : 'text-neutral-500'}`} />
+                  <span className="text-xs font-bold uppercase tracking-wider">
+                    Register as a Seller / Vendor
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-500 hidden sm:block">
-                  Access merchant dashboard & sell directly
-                </p>
+                <span className={`text-[10px] ${formData.isSeller ? 'text-neutral-300' : 'text-neutral-500'}`}>
+                  Access merchant tools
+                </span>
               </div>
             </label>
 
-            {/* Submit Button */}
-            <div className="pt-1">
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full relative group overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-amber-400/30 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-xl transition-all duration-300 group-hover:scale-105" />
-                <div className="relative px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-400 text-zinc-950 font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 transition-all duration-200 group-hover:brightness-105 shadow-md shadow-amber-500/20">
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Creating account...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Complete Registration</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                    </>
-                  )}
-                </div>
-              </button>
-            </div>
-
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 px-4 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 cursor-pointer active:scale-[0.99]"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
           </form>
 
-          {/* Divider */}
           <div className="relative flex items-center justify-center my-4">
-            <div className="border-t border-zinc-800/80 w-full" />
-            <span className="bg-zinc-900/90 px-3 text-[11px] font-medium text-zinc-500 uppercase tracking-wider shrink-0">
-              Or continue with
+            <div className="border-t border-neutral-200 w-full" />
+            <span className="bg-[#FBF9F5] px-3 text-[11px] font-bold text-neutral-400 uppercase tracking-widest shrink-0">
+              OR
             </span>
-            <div className="border-t border-zinc-800/80 w-full" />
+            <div className="border-t border-neutral-200 w-full" />
           </div>
 
-          {/* Continue with Google Button */}
           <Cntinuewithgoogle text="Continue with Google" />
 
-          {/* Footer Navigation */}
-          <div className="mt-4 pt-3.5 border-t border-zinc-800/60 text-center">
-            <p className="text-xs text-zinc-400">
+          <div className="pt-2 text-center">
+            <p className="text-xs text-neutral-600">
               Already have an account?{' '}
               <Link 
                 to="/login" 
-                className="font-semibold text-amber-400 hover:text-amber-300 underline-offset-4 hover:underline transition-colors ml-1"
+                className="font-bold text-neutral-900 hover:underline underline-offset-4 transition-all ml-1"
               >
                 Sign in here
               </Link>
             </p>
           </div>
-
-        </div>
-
-        {/* Bottom subtle brand watermark */}
-        <div className="text-center mt-3">
-          <p className="text-[11px] text-zinc-600">
-            Protected by modern encryption • Powered by Whitmore
-          </p>
         </div>
       </div>
     </div>
