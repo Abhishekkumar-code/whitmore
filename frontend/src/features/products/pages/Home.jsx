@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import {
   Package,
   Search,
@@ -72,6 +73,7 @@ const formatDate = (dateStr) => {
 const Home = () => {
   const navigate = useNavigate();
   const { handleallproducts, loading, error } = useproduct();
+
   const allproducts = useSelector(
     (state) => state.product.allproducts || []
   );
@@ -181,7 +183,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-neutral-900 flex flex-col font-sans selection:bg-neutral-900 selection:text-white">
-      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 border border-neutral-700 animate-in fade-in slide-in-from-bottom-4 duration-200">
           <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
@@ -189,41 +190,79 @@ const Home = () => {
         </div>
       )}
 
-      {/* Announcement Bar */}
       <div className="bg-neutral-900 text-white text-[11px] font-semibold py-2 px-4 text-center tracking-wider uppercase flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-        <span>Complimentary Express Shipping on Orders Over ₹1,500</span>
+        <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+        <span className="truncate">Complimentary Express Shipping on Orders Over ₹1,500</span>
       </div>
 
-      {/* Main E-Commerce Navbar */}
-      <header className="border-b border-neutral-200 bg-white/95 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 py-3.5 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* Logo */}
-          <div
-            onClick={() => navigate("/")}
-            className="flex items-center gap-3 cursor-pointer group shrink-0"
-          >
-            <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center font-black tracking-wider text-base shadow-md group-hover:scale-105 transition-transform">
-              W
+      <header className="border-b border-neutral-200 bg-white/95 backdrop-blur-md sticky top-0 z-40 px-3 sm:px-8 py-3 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <div
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2.5 cursor-pointer group shrink-0"
+            >
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center font-black tracking-wider text-base shadow-md group-hover:scale-105 transition-transform">
+                W
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-neutral-900">
+                    WHITMORE
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-600">
+                    STORE
+                  </span>
+                </div>
+                <p className="text-[10px] sm:text-[11px] text-neutral-500 font-medium hidden xs:block">
+                  Luxury & Essential Marketplace
+                </p>
+              </div>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-extrabold uppercase tracking-widest text-neutral-900">
-                  WHITMORE
-                </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-600">
-                  STORE
+
+            <div className="flex items-center gap-2 sm:hidden shrink-0">
+              <button
+                type="button"
+                onClick={() => handleallproducts()}
+                disabled={loading}
+                title="Refresh Products"
+                className="p-1.5 rounded-xl border border-neutral-200 bg-white text-neutral-700 hover:text-black transition-all cursor-pointer disabled:opacity-50 shadow-sm"
+              >
+                <RefreshCw
+                  className={`w-4 h-4 ${
+                    loading ? "animate-spin text-neutral-900" : ""
+                  }`}
+                />
+              </button>
+
+              <button
+                onClick={() => setActiveTab(activeTab === "saved" ? "all" : "saved")}
+                className={`p-1.5 rounded-xl border transition-all relative cursor-pointer ${
+                  activeTab === "saved"
+                    ? "bg-amber-500 border-amber-500 text-white"
+                    : "border-neutral-200 bg-white text-neutral-700"
+                }`}
+                title="View Wishlist"
+              >
+                <Heart className="w-4 h-4" />
+                {likedProducts.size > 0 && (
+                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[8px] font-black flex items-center justify-center border border-white">
+                    {likedProducts.size}
+                  </span>
+                )}
+              </button>
+
+              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer">
+                <ShoppingCart className="w-3.5 h-3.5 text-amber-400" />
+                <span className="bg-white/20 text-white text-[9px] font-black px-1 rounded">
+                  {cartItems.length}
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-500 font-medium hidden sm:block">
-                Luxury & Essential Marketplace
-              </p>
             </div>
           </div>
 
-          {/* Center Search Input */}
-          <div className="relative flex-1 max-w-lg mx-2 sm:mx-6">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+          <div className="relative flex-1 max-w-full sm:max-w-md md:max-w-lg">
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             <input
               type="text"
               placeholder="Search products by title, description or ID..."
@@ -241,9 +280,7 @@ const Home = () => {
             )}
           </div>
 
-          {/* Right Header Actions */}
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Catalog Refresh */}
+          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
             <button
               type="button"
               onClick={() => handleallproducts()}
@@ -258,7 +295,6 @@ const Home = () => {
               />
             </button>
 
-            {/* Wishlist Button */}
             <button
               onClick={() => setActiveTab(activeTab === "saved" ? "all" : "saved")}
               className={`p-2 rounded-xl border transition-all relative cursor-pointer ${
@@ -276,20 +312,18 @@ const Home = () => {
               )}
             </button>
 
-            {/* Shopping Cart Button */}
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer hover:bg-black transition-all">
               <ShoppingCart className="w-4 h-4 text-amber-400" />
-              <span className="hidden sm:inline">Bag</span>
+              <span className="hidden md:inline">Bag</span>
               <span className="bg-white/20 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md ml-0.5">
                 {cartItems.length}
               </span>
             </div>
 
-            {/* Auth Buttons */}
             {user ? (
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-900 text-xs font-semibold">
-                <User className="w-3.5 h-3.5 text-neutral-700" />
-                <span className="max-w-[100px] truncate hidden sm:inline">
+                <User className="w-3.5 h-3.5 text-neutral-700 shrink-0" />
+                <span className="max-w-[90px] truncate hidden md:inline">
                   {user.fullname || user.email}
                 </span>
               </div>
@@ -305,7 +339,7 @@ const Home = () => {
                 <button
                   type="button"
                   onClick={() => navigate("/register")}
-                  className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs transition-all cursor-pointer shadow-sm hidden sm:block"
+                  className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs transition-all cursor-pointer shadow-sm"
                 >
                   Register
                 </button>
@@ -315,9 +349,7 @@ const Home = () => {
         </div>
       </header>
 
-      {/* Catalog Title & Filters Section */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-8 space-y-6">
-        {/* Error Alert */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
         {error && (
           <div className="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-between gap-3 text-xs text-red-800 shadow-sm">
             <div className="flex items-center gap-2">
@@ -333,7 +365,6 @@ const Home = () => {
           </div>
         )}
 
-        {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-neutral-200">
           <div>
             <div className="flex items-center gap-2">
@@ -349,11 +380,9 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Filter & Sort Controls */}
-          <div className="flex items-center flex-wrap gap-2.5">
-            {/* Currency Filter */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-neutral-200 shadow-sm">
-              <Filter className="w-3.5 h-3.5 text-neutral-500 ml-2" />
+          <div className="flex items-center flex-wrap gap-2">
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-neutral-200 shadow-sm">
+              <Filter className="w-3.5 h-3.5 text-neutral-500 ml-2 shrink-0" />
               <select
                 value={currencyFilter}
                 onChange={(e) => setCurrencyFilter(e.target.value)}
@@ -368,9 +397,8 @@ const Home = () => {
               </select>
             </div>
 
-            {/* Sort Dropdown */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-neutral-200 shadow-sm">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-500 ml-2" />
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-neutral-200 shadow-sm">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-500 ml-2 shrink-0" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -383,7 +411,6 @@ const Home = () => {
               </select>
             </div>
 
-            {/* View Mode Toggle */}
             <div className="flex items-center bg-white p-1 rounded-xl border border-neutral-200 shadow-sm">
               <button
                 onClick={() => setViewMode("grid")}
@@ -411,7 +438,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setActiveTab("all")}
@@ -448,12 +474,11 @@ const Home = () => {
           )}
         </div>
 
-        {/* Loading Skeletons */}
         {loading && (
           <div
             className={
               viewMode === "grid"
-                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
                 : "space-y-4"
             }
           >
@@ -474,9 +499,8 @@ const Home = () => {
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && filteredProducts.length === 0 && (
-          <div className="bg-white rounded-3xl p-12 text-center border border-neutral-200 shadow-sm max-w-lg mx-auto my-12 space-y-4">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 text-center border border-neutral-200 shadow-sm max-w-lg mx-auto my-8 sm:my-12 space-y-4">
             <div className="w-16 h-16 bg-neutral-100 rounded-2xl mx-auto flex items-center justify-center text-neutral-400">
               <Shirt className="w-8 h-8 stroke-1" />
             </div>
@@ -503,9 +527,8 @@ const Home = () => {
           </div>
         )}
 
-        {/* Product Cards - Grid View (WITH IMAGES) */}
         {!loading && filteredProducts.length > 0 && viewMode === "grid" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredProducts.map((product) => {
               const mainImg = getImageUrl(product.images?.[0]);
               const imageCount = product.images?.length || 0;
@@ -515,13 +538,11 @@ const Home = () => {
                 <div
                   key={product._id}
                   onClick={() => {
-                    setSelectedProduct(product);
-                    setSelectedImageIdx(0);
+                    navigate(`/products/${product._id}`);
                   }}
                   className="group bg-white rounded-3xl border border-neutral-200 hover:border-neutral-400 p-4 transition-all duration-300 hover:shadow-xl flex flex-col justify-between cursor-pointer relative overflow-hidden"
                 >
-                  {/* Top Image Container */}
-                  <div className="relative w-full h-60 rounded-2xl bg-neutral-100 overflow-hidden mb-4 flex items-center justify-center">
+                  <div className="relative w-full h-56 sm:h-60 rounded-2xl bg-neutral-100 overflow-hidden mb-4 flex items-center justify-center">
                     {mainImg ? (
                       <img
                         src={mainImg}
@@ -542,7 +563,6 @@ const Home = () => {
                       </div>
                     )}
 
-                    {/* Image Counter Badge */}
                     {imageCount > 1 && (
                       <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
                         <ImageIcon className="w-3 h-3" />
@@ -550,7 +570,6 @@ const Home = () => {
                       </div>
                     )}
 
-                    {/* Wishlist Heart */}
                     <button
                       onClick={(e) => toggleLike(product._id, e)}
                       className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition-all shadow-md ${
@@ -564,7 +583,6 @@ const Home = () => {
                       />
                     </button>
 
-                    {/* Quick View Overlay Tag */}
                     <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-full py-2 bg-neutral-900/90 backdrop-blur-md text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg">
                         <Eye className="w-3.5 h-3.5" />
@@ -573,7 +591,6 @@ const Home = () => {
                     </div>
                   </div>
 
-                  {/* Card Body */}
                   <div className="space-y-2 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between gap-2">
@@ -590,20 +607,19 @@ const Home = () => {
                       </p>
                     </div>
 
-                    {/* Price & Add to Cart */}
                     <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-2 mt-3">
                       <div>
                         <div className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">
                           PRICE
                         </div>
-                        <div className="text-lg font-black text-neutral-900">
+                        <div className="text-base sm:text-lg font-black text-neutral-900">
                           {formatPrice(product.price)}
                         </div>
                       </div>
 
                       <button
                         onClick={(e) => addToCart(product, e)}
-                        className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer shrink-0"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>Add to Bag</span>
@@ -616,7 +632,6 @@ const Home = () => {
           </div>
         )}
 
-        {/* Product Cards - List View (WITH IMAGES) */}
         {!loading && filteredProducts.length > 0 && viewMode === "list" && (
           <div className="space-y-4">
             {filteredProducts.map((product) => {
@@ -631,7 +646,7 @@ const Home = () => {
                     setSelectedProduct(product);
                     setSelectedImageIdx(0);
                   }}
-                  className="group bg-white rounded-3xl border border-neutral-200 hover:border-neutral-400 p-4 transition-all duration-300 hover:shadow-lg flex flex-col sm:flex-row items-stretch gap-5 cursor-pointer"
+                  className="group bg-white rounded-3xl border border-neutral-200 hover:border-neutral-400 p-4 transition-all duration-300 hover:shadow-lg flex flex-col sm:flex-row items-stretch gap-4 sm:gap-5 cursor-pointer"
                 >
                   <div className="relative w-full sm:w-48 h-48 sm:h-auto rounded-2xl bg-neutral-100 overflow-hidden shrink-0 flex items-center justify-center">
                     {mainImg ? (
@@ -660,35 +675,26 @@ const Home = () => {
                     <div>
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-extrabold text-neutral-900 text-lg group-hover:text-amber-600 transition-colors">
+                          <h3 className="font-extrabold text-neutral-900 text-base sm:text-lg group-hover:text-amber-600 transition-colors">
                             {product.title || "Untitled Product"}
                           </h3>
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600 border border-neutral-200">
-                            ID: {product._id?.substring(0, 8)}...
-                          </span>
                         </div>
-                        <div className="text-xl font-black text-neutral-900">
+                        <div className="text-lg sm:text-xl font-black text-neutral-900">
                           {formatPrice(product.price)}
                         </div>
                       </div>
 
-                      <p className="text-xs text-neutral-600 mt-2 leading-relaxed">
+                      <p className="text-xs text-neutral-600 mt-2 leading-relaxed line-clamp-3">
                         {product.description || "No description provided."}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+                    <div className="flex items-center justify-between pt-3 border-t border-neutral-100 flex-wrap gap-2">
                       <div className="flex items-center gap-4 text-xs text-neutral-500 font-medium">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3.5 h-3.5 text-neutral-400" />
                           <span>Added {formatDate(product.createdAt)}</span>
                         </div>
-                        {product.seller && (
-                          <div className="flex items-center gap-1">
-                            <Store className="w-3.5 h-3.5 text-neutral-400" />
-                            <span>Seller ID: {product.seller.substring(0, 6)}...</span>
-                          </div>
-                        )}
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -721,14 +727,12 @@ const Home = () => {
         )}
       </main>
 
-      {/* Product Quick View Modal (WITH IMAGES) */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
           <div
-            className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-neutral-200 relative animate-in fade-in zoom-in duration-200 my-auto"
+            className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-neutral-200 relative animate-in fade-in zoom-in duration-200 my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={() => setSelectedProduct(null)}
               className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-neutral-900/80 hover:bg-black text-white flex items-center justify-center transition-colors cursor-pointer shadow-md"
@@ -737,9 +741,8 @@ const Home = () => {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2">
-              {/* Image Section */}
-              <div className="bg-neutral-100 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-neutral-200">
-                <div className="relative w-full h-72 sm:h-80 rounded-2xl overflow-hidden bg-white shadow-inner flex items-center justify-center mb-4">
+              <div className="bg-neutral-100 p-4 sm:p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-neutral-200">
+                <div className="relative w-full h-60 sm:h-72 rounded-2xl overflow-hidden bg-white shadow-inner flex items-center justify-center mb-4">
                   {selectedProduct.images?.[selectedImageIdx] ? (
                     <img
                       src={
@@ -758,7 +761,6 @@ const Home = () => {
                   )}
                 </div>
 
-                {/* Thumbnails */}
                 {selectedProduct.images &&
                   selectedProduct.images.length > 1 && (
                     <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
@@ -766,7 +768,7 @@ const Home = () => {
                         <button
                           key={img._id || idx}
                           onClick={() => setSelectedImageIdx(idx)}
-                          className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
                             selectedImageIdx === idx
                               ? "border-neutral-900 scale-105 shadow-md"
                               : "border-transparent opacity-60 hover:opacity-100"
@@ -783,31 +785,19 @@ const Home = () => {
                   )}
               </div>
 
-              {/* Product Info Section */}
               <div className="p-6 sm:p-8 flex flex-col justify-between space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-amber-100 text-amber-900 rounded-full border border-amber-200">
                       Verified Product
                     </span>
-                    <button
-                      onClick={(e) => handleCopyId(selectedProduct._id, e)}
-                      className="text-[11px] text-neutral-500 hover:text-neutral-900 font-mono flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>ID: {selectedProduct._id?.substring(0, 8)}...</span>
-                      {copiedId === selectedProduct._id ? (
-                        <Check className="w-3 h-3 text-emerald-600" />
-                      ) : (
-                        <Copy className="w-3 h-3 text-neutral-400" />
-                      )}
-                    </button>
                   </div>
 
                   <div>
-                    <h2 className="text-2xl font-extrabold text-neutral-900 leading-tight">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 leading-tight">
                       {selectedProduct.title || "Untitled Product"}
                     </h2>
-                    <div className="text-2xl font-black text-neutral-900 mt-2">
+                    <div className="text-xl sm:text-2xl font-black text-neutral-900 mt-2">
                       {formatPrice(selectedProduct.price)}
                     </div>
                   </div>
@@ -816,7 +806,7 @@ const Home = () => {
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-neutral-400">
                       Description
                     </span>
-                    <p className="text-xs text-neutral-600 leading-relaxed max-h-36 overflow-y-auto pr-1">
+                    <p className="text-xs text-neutral-600 leading-relaxed max-h-32 overflow-y-auto pr-1">
                       {selectedProduct.description ||
                         "No description provided for this item."}
                     </p>
@@ -844,7 +834,6 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="space-y-2 pt-4 border-t border-neutral-100">
                   <button
                     onClick={() => {
@@ -870,8 +859,7 @@ const Home = () => {
         </div>
       )}
 
-      {/* Minimal Footer */}
-      <footer className="border-t border-neutral-200 bg-white py-8 px-4 sm:px-8 mt-12 text-center text-xs text-neutral-500">
+      <footer className="border-t border-neutral-200 bg-white py-6 sm:py-8 px-4 sm:px-8 mt-12 text-center text-xs text-neutral-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-lg bg-neutral-900 text-white flex items-center justify-center font-black text-xs">
@@ -892,4 +880,3 @@ const Home = () => {
 };
 
 export default Home;
- 

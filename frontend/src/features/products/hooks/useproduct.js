@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createproduct as createproductApi, getseller as sellerproductApi, getallproducts as getallproductsApi } from "../services/product.api";
+import {addProductVarient as addvarient ,createproduct as createproductApi, getseller as sellerproductApi, getallproducts as getallproductsApi, getproductdetail, addProductVarient } from "../services/product.api";
 import { setSellerProducts, setallproducts } from "../product.slice";
 
 export const useproduct = () => {
@@ -16,9 +16,7 @@ export const useproduct = () => {
             setSuccess(false);
 
             const data = await createproductApi(formData);
-
-            // optimistically push new product into sellerProducts
-            dispatch(setSellerProducts([])); // will be refetched on list page
+            dispatch(setSellerProducts([]));
 
             setSuccess(true);
             return { success: true, data };
@@ -40,21 +38,20 @@ export const useproduct = () => {
             setError(null);
             setSuccess(false);
 
-            const data = await sellerproductApi()
+            const data = await sellerproductApi();
             dispatch(setSellerProducts(data.product));
-            return data.product
+            return data.product;
         } catch (err) {
             const msg =
                 err?.response?.data?.message ||
                 err?.message ||
-                "Failed to seen the Products.";
+                "Failed to fetch products.";
             setError(msg);
             return { success: false, error: msg };
         } finally {
             setLoading(false);
         }
-
-    }
+    };
 
     const handleallproducts = async () => {
         try {
@@ -76,17 +73,55 @@ export const useproduct = () => {
         }
     };
 
-     
+    const handlegetproductdetail = async (productId) => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await getproductdetail(productId);
+            return data.product;
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Failed to fetch product details. Please try again.";
+            setError(msg);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    };
+ 
 
-return {
-    loading,
-    error,
-    success,
-    handlecreateproduct,
-    handlegetsellerproducts,
-    handleallproducts,
-    clearError: () => setError(null),
-};
+    const handleAddvarient = async (productId, newProductVarient) => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await addProductVarient(productId, newProductVarient);
+            return data;
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Failed to add variant. Please try again.";
+            setError(msg);
+            return { success: false, error: msg };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    return {
+        loading,
+        error,
+        success,
+        handlecreateproduct,
+        handlegetsellerproducts,
+        handleallproducts,
+        handlegetproductdetail,
+        handleAddvarient,
+        clearError: () => setError(null),
+    };
 };
 
 export default useproduct;

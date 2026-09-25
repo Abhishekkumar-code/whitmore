@@ -146,7 +146,7 @@ const CreateProducts = () => {
 
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-extrabold tracking-tight text-neutral-900 uppercase">
+                <h1 className="text-base sm:text-lg font-extrabold tracking-tight text-neutral-900 uppercase">
                   New Product Listing
                 </h1>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-800 text-[10px] font-extrabold tracking-widest uppercase">
@@ -154,7 +154,7 @@ const CreateProducts = () => {
                   Atelier
                 </span>
               </div>
-              <p className="text-xs text-neutral-500 mt-0.5">
+              <p className="text-xs text-neutral-500 mt-0.5 hidden xs:block">
                 Publish a new item to your Whitmore storefront
               </p>
             </div>
@@ -162,7 +162,7 @@ const CreateProducts = () => {
         </div>
       </header>
 
-      <main className="flex-1 flex justify-center px-4 py-8 sm:py-12">
+      <main className="flex-1 flex justify-center px-4 py-6 sm:py-12">
         <div className="w-full max-w-2xl">
           {success && (
             <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 text-emerald-800">
@@ -186,12 +186,12 @@ const CreateProducts = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-xl space-y-8"
+            className="bg-white border border-neutral-200 rounded-2xl sm:rounded-3xl p-5 sm:p-10 shadow-xl space-y-6 sm:space-y-8"
           >
             <section>
               <SectionHeader icon={Layers} label="Product Details" />
 
-              <div className="space-y-5">
+              <div className="space-y-4 sm:space-y-5">
                 <div>
                   <FieldLabel>Product Title</FieldLabel>
                   <div className="relative group">
@@ -296,7 +296,7 @@ const CreateProducts = () => {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`w-full flex flex-col items-center justify-center gap-2.5 py-10 rounded-2xl border-2 border-dashed transition-all cursor-pointer group ${
+                className={`w-full flex flex-col items-center justify-center gap-2.5 py-8 sm:py-10 rounded-2xl border-2 border-dashed transition-all cursor-pointer group ${
                   errors.images
                     ? "border-red-400 bg-red-50/50"
                     : "border-neutral-300 hover:border-neutral-900 bg-[#FBF9F5] hover:bg-neutral-100/50"
@@ -305,8 +305,8 @@ const CreateProducts = () => {
                 <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white border border-neutral-200 group-hover:border-neutral-900 shadow-sm transition-all">
                   <Upload className="w-5 h-5 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold text-neutral-900 uppercase tracking-wider">
+                <div className="text-center px-4">
+                  <p className="text-xs sm:text-sm font-bold text-neutral-900 uppercase tracking-wider">
                     Click to upload images
                   </p>
                   <p className="text-xs text-neutral-500 mt-1">
@@ -318,7 +318,7 @@ const CreateProducts = () => {
               <ErrorMsg msg={errors.images} />
 
               {images.length > 0 && (
-                <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                   {images.map((img, idx) => (
                     <div
                       key={img.preview}

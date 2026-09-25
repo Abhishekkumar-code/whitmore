@@ -53,8 +53,6 @@ const Login = () => {
     }
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -75,9 +73,6 @@ const Login = () => {
       console.error("Login failed:", err);
     }
   };
-
-
-
 
   return (
     <div className="min-h-screen w-full bg-[#FBF9F5] text-neutral-900 grid grid-cols-1 lg:grid-cols-2 font-sans selection:bg-neutral-900 selection:text-white">
@@ -117,8 +112,8 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center items-center px-6 py-12 sm:px-12 lg:px-16 bg-[#FBF9F5]">
-        <div className="w-full max-w-md space-y-8">
+      <div className="flex flex-col justify-center items-center px-4 sm:px-12 lg:px-16 py-8 sm:py-12 bg-[#FBF9F5]">
+        <div className="w-full max-w-md space-y-6 sm:space-y-8">
           <div className="space-y-2">
             <div className="lg:hidden mb-4">
               <span className="text-xl font-black tracking-widest uppercase text-neutral-900">WHITMORE</span>

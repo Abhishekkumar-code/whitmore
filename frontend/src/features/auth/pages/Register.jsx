@@ -129,7 +129,7 @@ const Register = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center items-center px-6 py-10 sm:px-12 lg:px-16 bg-[#FBF9F5]">
+      <div className="flex flex-col justify-center items-center px-4 sm:px-12 lg:px-16 py-8 sm:py-10 bg-[#FBF9F5]">
         <div className="w-full max-w-lg space-y-6">
           <div className="space-y-2">
             <div className="lg:hidden mb-4">

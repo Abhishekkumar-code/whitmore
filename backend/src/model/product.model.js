@@ -33,6 +33,35 @@ const productSchema = new mongoose.Schema({
                 required:true
             }
         }
+    ],
+
+    variants:[
+        {
+           images:[{
+            url:{
+                type:String,
+                required:true
+            }
+           }],
+           
+           stock:{
+            type:Number,
+            required:true,
+            default:0
+           },
+           attributes:{
+            type:Map,
+            of:String
+
+           },
+           price:{
+            amount:{
+                type:Number,
+                required:true
+            }
+           }
+
+        }
     ]
 
 },{timestamps:true})

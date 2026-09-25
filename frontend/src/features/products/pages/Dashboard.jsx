@@ -185,7 +185,7 @@ const Dashboard = () => {
                   ATELIER
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-500 font-medium">
+              <p className="text-[11px] text-neutral-500 font-medium hidden sm:block">
                 Merchant Storefront & Catalog Portal
               </p>
             </div>
@@ -207,16 +207,16 @@ const Dashboard = () => {
             <button
               type="button"
               onClick={() => navigate("/seller/createproduct")}
-              className="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.99]"
+              className="px-3.5 sm:px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.99]"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
-              <span>Add Product</span>
+              <span className="hidden xs:inline">Add Product</span>
             </button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-8 space-y-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {error && (
           <div className="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-between gap-3 text-xs text-red-800 shadow-sm">
             <div className="flex items-center gap-2">
@@ -239,10 +239,10 @@ const Dashboard = () => {
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-amber-300 text-xs font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>SELLER CENTRAL & CATALOG MANAGEMENT</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="truncate">SELLER CENTRAL & CATALOG MANAGEMENT</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
                 Curate & Elevate Your Brand Collection.
               </h2>
               <p className="text-neutral-300 text-xs sm:text-sm leading-relaxed font-light">
@@ -277,48 +277,48 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">
                 Total Products
               </p>
-              <h3 className="text-3xl font-extrabold text-neutral-900">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-900">
                 {stats.totalCount}
               </h3>
               <p className="text-[11px] font-semibold text-neutral-500 flex items-center gap-1">
-                <Layers className="w-3.5 h-3.5 text-neutral-700" /> Catalog Inventory
+                <Layers className="w-3.5 h-3.5 text-neutral-700 shrink-0" /> Catalog Inventory
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-[#FBF9F5] border border-neutral-200 group-hover:bg-neutral-900 group-hover:text-white transition-colors flex items-center justify-center text-neutral-900">
-              <Package className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FBF9F5] border border-neutral-200 group-hover:bg-neutral-900 group-hover:text-white transition-colors flex items-center justify-center text-neutral-900 shrink-0">
+              <Package className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
 
-          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
+          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">
                 Catalog Value
               </p>
-              <h3 className="text-3xl font-extrabold text-neutral-900">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 truncate max-w-[160px]">
                 {stats.mainCurrencySymbol}
                 {stats.totalVal.toLocaleString()}
               </h3>
               <p className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
-                <TrendingUp className="w-3.5 h-3.5" /> Total Listed Assets
+                <TrendingUp className="w-3.5 h-3.5 shrink-0" /> Total Listed Assets
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-[#FBF9F5] border border-neutral-200 group-hover:bg-neutral-900 group-hover:text-white transition-colors flex items-center justify-center text-neutral-900">
-              <Tag className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FBF9F5] border border-neutral-200 group-hover:bg-neutral-900 group-hover:text-white transition-colors flex items-center justify-center text-neutral-900 shrink-0">
+              <Tag className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
 
-          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
+          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">
                 Avg Item Price
               </p>
-              <h3 className="text-3xl font-extrabold text-neutral-900">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 truncate max-w-[160px]">
                 {stats.mainCurrencySymbol}
                 {Number(stats.avgPrice).toLocaleString()}
               </h3>
@@ -326,30 +326,30 @@ const Dashboard = () => {
                 Per unit listed item
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-[#FBF9F5] border border-neutral-200 group-hover:bg-neutral-900 group-hover:text-white transition-colors flex items-center justify-center text-neutral-900">
-              <Sparkles className="w-6 h-6 text-amber-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FBF9F5] border border-neutral-200 group-hover:bg-neutral-900 group-hover:text-white transition-colors flex items-center justify-center text-neutral-900 shrink-0">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
             </div>
           </div>
 
-          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
+          <div className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">
                 Storefront Health
               </p>
-              <h3 className="text-2xl font-extrabold text-emerald-600 flex items-center gap-1.5">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-emerald-600 flex items-center gap-1.5">
                 Optimal
               </h3>
               <p className="text-[11px] font-semibold text-neutral-500">
                 100% Operational
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-              <Check className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0">
+              <Check className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white border border-neutral-200 rounded-3xl p-5 shadow-sm space-y-4">
+        <div className="bg-white border border-neutral-200 rounded-3xl p-4 sm:p-5 shadow-sm space-y-4">
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
@@ -373,11 +373,11 @@ const Dashboard = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-none">
                 <select
                   value={currencyFilter}
                   onChange={(e) => setCurrencyFilter(e.target.value)}
-                  className="bg-[#FBF9F5] border border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 text-neutral-800 text-xs font-bold rounded-xl pl-3 pr-8 py-2.5 focus:outline-none cursor-pointer appearance-none"
+                  className="w-full bg-[#FBF9F5] border border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 text-neutral-800 text-xs font-bold rounded-xl pl-3 pr-8 py-2.5 focus:outline-none cursor-pointer appearance-none"
                 >
                   <option value="ALL">All Currencies</option>
                   {Object.keys(CURRENCY_SYMBOLS).map((curr) => (
@@ -389,13 +389,13 @@ const Dashboard = () => {
                 <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-400 absolute right-3 top-3 pointer-events-none" />
               </div>
 
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-none">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-[#FBF9F5] border border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 text-neutral-800 text-xs font-bold rounded-xl pl-3 pr-8 py-2.5 focus:outline-none cursor-pointer appearance-none"
-                >
-                  <option value="newest">Newest First</option>
+                  className="w-full bg-[#FBF9F5] border border-neutral-200 hover:border-neutral-300 focus:border-neutral-900 text-neutral-800 text-xs font-bold rounded-xl pl-3 pr-8 py-2.5 focus:outline-none cursor-pointer appearance-none"
+                > 
+              <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
@@ -430,7 +430,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 pt-2 border-t border-neutral-100 overflow-x-auto pb-1">
+          <div className="flex items-center gap-2 pt-2 border-t border-neutral-100 overflow-x-auto pb-1 scrollbar-none">
             <button
               onClick={() => setActiveTab("all")}
               className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer shrink-0 ${
@@ -465,7 +465,7 @@ const Dashboard = () => {
         </div>
 
         {loading && sellerproducts.length === 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {[1, 2, 3, 4].map((n) => (
               <div
                 key={n}
@@ -482,7 +482,7 @@ const Dashboard = () => {
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="bg-white border border-neutral-200 rounded-3xl p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-8 space-y-4 shadow-sm">
+          <div className="bg-white border border-neutral-200 rounded-3xl p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-8 space-y-4 shadow-sm">
             <div className="w-16 h-16 rounded-3xl bg-[#FBF9F5] border border-neutral-200 flex items-center justify-center text-neutral-800 shadow-sm">
               <Shirt className="w-8 h-8" />
             </div>
@@ -519,7 +519,7 @@ const Dashboard = () => {
             )}
           </div>
         ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredProducts.map((product) => {
               const coverImg =
                 product.images && product.images.length > 0
@@ -528,6 +528,9 @@ const Dashboard = () => {
 
               return (
                 <div
+                onClick={()=>{
+                  navigate(`/seller/product/${product._id}`)
+                }}
                   key={product._id}
                   className="group bg-white border border-neutral-200/90 hover:border-neutral-900 rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-black/5"
                 >
@@ -582,14 +585,11 @@ const Dashboard = () => {
                     </span>
                   </div>
 
-                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <span className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400">
                           CATALOG ITEM
-                        </span>
-                        <span className="text-[10px] font-mono text-neutral-400">
-                          #{product._id?.slice(-6)}
                         </span>
                       </div>
 
@@ -607,27 +607,6 @@ const Dashboard = () => {
                         <Calendar className="w-3.5 h-3.5 text-neutral-400" />
                         <span>{formatDate(product.createdAt)}</span>
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={(e) => handleCopyId(product._id, e)}
-                          title="Copy Product ID"
-                          className="font-mono text-[10px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200 hover:border-neutral-400 transition-colors flex items-center gap-1 cursor-pointer"
-                        >
-                          {copiedId === product._id ? (
-                            <>
-                              <Check className="w-2.5 h-2.5 text-emerald-600" />
-                              <span className="text-emerald-600 font-bold">Copied</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-2.5 h-2.5" />
-                              <span>Copy ID</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -637,11 +616,10 @@ const Dashboard = () => {
         ) : (
           <div className="bg-white border border-neutral-200 rounded-3xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-neutral-700">
+              <table className="w-full text-left text-xs text-neutral-700 min-w-[600px]">
                 <thead className="bg-[#FBF9F5] text-[11px] font-extrabold uppercase tracking-wider text-neutral-500 border-b border-neutral-200">
                   <tr>
                     <th className="px-6 py-4">Product</th>
-                    <th className="px-6 py-4">ID</th>
                     <th className="px-6 py-4">Price</th>
                     <th className="px-6 py-4">Created Date</th>
                     <th className="px-6 py-4">Description</th>
@@ -685,9 +663,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-mono text-neutral-500">
-                          #{product._id?.slice(-8)}
-                        </td>
+
                         <td className="px-6 py-4">
                           <span className="font-extrabold text-neutral-900 text-sm">
                             {formatPrice(product.price)}
@@ -723,18 +699,15 @@ const Dashboard = () => {
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white border border-neutral-200 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]">
-            <div className="flex items-center justify-between p-6 border-b border-neutral-200 bg-[#FBF9F5]">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-neutral-200 bg-[#FBF9F5]">
               <div className="flex items-center gap-2.5">
                 <span className="p-2 rounded-xl bg-neutral-900 text-white shadow-md">
                   <Package className="w-4 h-4" />
                 </span>
                 <div>
-                  <h3 className="font-extrabold text-neutral-900 text-lg truncate">
+                  <h3 className="font-extrabold text-neutral-900 text-base sm:text-lg truncate max-w-[200px] sm:max-w-xs">
                     {selectedProduct.title}
                   </h3>
-                  <p className="text-[10px] font-mono text-neutral-400">
-                    ID: #{selectedProduct._id}
-                  </p>
                 </div>
               </div>
               <button
@@ -745,7 +718,7 @@ const Dashboard = () => {
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto space-y-6 flex-1 bg-white">
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 bg-white">
               {selectedProduct.images && selectedProduct.images.length > 0 ? (
                 <div className="space-y-3">
                   <div className="aspect-video w-full rounded-2xl bg-neutral-100 overflow-hidden border border-neutral-200 flex items-center justify-center">
@@ -759,12 +732,12 @@ const Dashboard = () => {
                   </div>
 
                   {selectedProduct.images.length > 1 && (
-                    <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
                       {selectedProduct.images.map((img, idx) => (
                         <button
                           key={idx}
                           onClick={() => setSelectedImageIdx(idx)}
-                          className={`w-16 h-16 rounded-xl overflow-hidden border shrink-0 transition-all cursor-pointer ${
+                          className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border shrink-0 transition-all cursor-pointer ${
                             selectedImageIdx === idx
                               ? "border-neutral-900 ring-2 ring-neutral-900/10 scale-105"
                               : "border-neutral-200 opacity-60 hover:opacity-100"
@@ -788,16 +761,16 @@ const Dashboard = () => {
               )}
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="bg-[#FBF9F5] p-4 rounded-2xl border border-neutral-200">
+                <div className="bg-[#FBF9F5] p-3.5 sm:p-4 rounded-2xl border border-neutral-200">
                   <span className="text-[10px] text-neutral-500 font-extrabold uppercase tracking-widest">
                     Price
                   </span>
-                  <p className="text-xl font-extrabold text-neutral-900 mt-0.5">
+                  <p className="text-lg sm:text-xl font-extrabold text-neutral-900 mt-0.5">
                     {formatPrice(selectedProduct.price)}
                   </p>
                 </div>
 
-                <div className="bg-[#FBF9F5] p-4 rounded-2xl border border-neutral-200">
+                <div className="bg-[#FBF9F5] p-3.5 sm:p-4 rounded-2xl border border-neutral-200">
                   <span className="text-[10px] text-neutral-500 font-extrabold uppercase tracking-widest">
                     Created Date
                   </span>
@@ -806,7 +779,7 @@ const Dashboard = () => {
                   </p>
                 </div>
 
-                <div className="bg-[#FBF9F5] p-4 rounded-2xl border border-neutral-200 col-span-2 sm:col-span-1">
+                <div className="bg-[#FBF9F5] p-3.5 sm:p-4 rounded-2xl border border-neutral-200 col-span-2 sm:col-span-1">
                   <span className="text-[10px] text-neutral-500 font-extrabold uppercase tracking-widest">
                     Images Count
                   </span>
@@ -820,13 +793,13 @@ const Dashboard = () => {
                 <h4 className="text-xs font-extrabold text-neutral-400 uppercase tracking-widest mb-2">
                   Description
                 </h4>
-                <div className="p-4.5 rounded-2xl bg-[#FBF9F5] border border-neutral-200 text-sm text-neutral-700 leading-relaxed whitespace-pre-line font-normal">
+                <div className="p-4 rounded-2xl bg-[#FBF9F5] border border-neutral-200 text-xs sm:text-sm text-neutral-700 leading-relaxed whitespace-pre-line font-normal">
                   {selectedProduct.description || "No description provided."}
                 </div>
               </div>
             </div>
 
-            <div className="p-5 border-t border-neutral-200 bg-[#FBF9F5] flex justify-end">
+            <div className="p-4 sm:p-5 border-t border-neutral-200 bg-[#FBF9F5] flex justify-end">
               <button
                 onClick={() => setSelectedProduct(null)}
                 className="px-6 py-2.5 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-md"
