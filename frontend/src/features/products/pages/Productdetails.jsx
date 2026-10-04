@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useCart } from "../../cart/hook/useCart";
 import {
   ShoppingBag,
   Zap,
@@ -95,15 +96,19 @@ const Productdetails = () => {
 
   const user = useSelector((state) => state.auth?.user);
   const { handlegetproductdetail, loading, error } = useproduct();
-
+  const { handleadditem } = useCart()
   const fetchProductDetail = async () => {
     if (!productId) return;
     const data = await handlegetproductdetail(productId);
     if (data) {
       setProduct(data);
-      // Keep main base product selected by default
-      setSelectedVariantId(null);
-      setSelectedAttributes({});
+      if (data.variants && data.variants.length > 0) {
+        setSelectedVariantId(data.variants[0]._id);
+        setSelectedAttributes(data.variants[0].attributes || {});
+      } else {
+        setSelectedVariantId(null);
+        setSelectedAttributes({});
+      }
     }
   };
 
@@ -119,6 +124,8 @@ const Productdetails = () => {
       const match = product.variants.find((v) => v._id === selectedVariantId);
       if (match) return match;
     }
+
+
     if (Object.keys(selectedAttributes).length > 0) {
       const match = product.variants.find((v) => {
         if (!v.attributes) return false;
@@ -131,6 +138,7 @@ const Productdetails = () => {
     return null;
   }, [product, selectedVariantId, selectedAttributes]);
 
+  console.log(activeVariant);
   // Extract unique attributes across variants
   const availableAttributes = useMemo(() => {
     if (!product?.variants || product.variants.length === 0) return {};
@@ -178,16 +186,16 @@ const Productdetails = () => {
     activeVariant && variantImages.length > 0
       ? variantImages
       : mainImages.length > 0
-      ? mainImages
-      : DEMO_FALLBACK_IMAGES;
+        ? mainImages
+        : DEMO_FALLBACK_IMAGES;
   const currentImage = imagesList[activeImageIdx] || imagesList[0];
 
   // Active Price & Stock (falling back cleanly to base product)
   const activePrice = activeVariant?.price?.amount !== undefined
     ? {
-        amount: activeVariant.price.amount,
-        currency: activeVariant.price.currency || product?.price?.currency || "INR",
-      }
+      amount: activeVariant.price.amount,
+      currency: activeVariant.price.currency || product?.price?.currency || "INR",
+    }
     : product?.price;
 
   const activeStock = activeVariant?.stock !== undefined
@@ -269,11 +277,33 @@ const Productdetails = () => {
       .join(" • ");
   };
 
-  const handleAddToCart = () => {
-    const variantInfo = activeVariant
-      ? ` (${formatVariantAttributesLabel(activeVariant.attributes)})`
-      : " (Main Product)";
-    showToast(`Added ${quantity} × "${product?.title || "item"}"${variantInfo} to Bag`);
+  const handleAddToCart = async () => {
+    if (!product?._id) return;
+    const targetVariant = activeVariant || product?.variants?.[0];
+    if (!targetVariant?._id) {
+      showToast("Please select a variant first");
+      return;
+    }
+
+    try {
+      const res = await handleadditem({
+        productId: product._id,
+        varientId: targetVariant._id,
+        quantity: Number(quantity),
+      });
+
+      if (res?.success) {
+        const variantInfo = targetVariant?.attributes
+          ? ` (${formatVariantAttributesLabel(targetVariant.attributes)})`
+          : "";
+        showToast(res.message || `Added ${quantity} × "${product?.title || "item"}"${variantInfo} to Bag`);
+      } else {
+        showToast(res?.message || "Failed to add product to cart");
+      }
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || "Error adding item to cart";
+      showToast(errorMsg);
+    }
   };
 
   const handleBuyNow = () => {
@@ -464,11 +494,10 @@ const Productdetails = () => {
 
                 <button
                   onClick={toggleWishlist}
-                  className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all shadow-md cursor-pointer ${
-                    isWishlisted
-                      ? "bg-red-500 text-white"
-                      : "bg-white/80 hover:bg-white text-neutral-700 hover:text-red-500"
-                  }`}
+                  className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all shadow-md cursor-pointer ${isWishlisted
+                    ? "bg-red-500 text-white"
+                    : "bg-white/80 hover:bg-white text-neutral-700 hover:text-red-500"
+                    }`}
                   title="Add to Wishlist"
                 >
                   <Heart className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`} />
@@ -491,11 +520,10 @@ const Productdetails = () => {
                       <button
                         key={idx}
                         onClick={() => setActiveImageIdx(idx)}
-                        className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all duration-200 shrink-0 cursor-pointer ${
-                          activeImageIdx === idx
-                            ? "border-neutral-900 ring-4 ring-neutral-900/10 scale-105 shadow-md"
-                            : "border-neutral-200 opacity-65 hover:opacity-100 hover:border-neutral-400"
-                        }`}
+                        className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all duration-200 shrink-0 cursor-pointer ${activeImageIdx === idx
+                          ? "border-neutral-900 ring-4 ring-neutral-900/10 scale-105 shadow-md"
+                          : "border-neutral-200 opacity-65 hover:opacity-100 hover:border-neutral-400"
+                          }`}
                       >
                         <img
                           src={imgUrl}
@@ -634,11 +662,10 @@ const Productdetails = () => {
                                   key={val}
                                   type="button"
                                   onClick={() => handleSelectAttribute(attrKey, val)}
-                                  className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center gap-2 ${
-                                    isSelected
-                                      ? "bg-neutral-900 text-white border-neutral-900 shadow-md scale-105"
-                                      : "bg-neutral-50 hover:bg-neutral-100 text-neutral-800 border-neutral-200 hover:border-neutral-300"
-                                  }`}
+                                  className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center gap-2 ${isSelected
+                                    ? "bg-neutral-900 text-white border-neutral-900 shadow-md scale-105"
+                                    : "bg-neutral-50 hover:bg-neutral-100 text-neutral-800 border-neutral-200 hover:border-neutral-300"
+                                    }`}
                                 >
                                   {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 stroke-[3]" />}
                                   <span>{val}</span>
@@ -692,11 +719,12 @@ const Productdetails = () => {
               <div className="space-y-3 pt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
-                    type="button"
                     onClick={handleAddToCart}
+                    type="button"
                     className="w-full py-4 px-6 rounded-2xl border-2 border-neutral-900 bg-white hover:bg-neutral-900 text-neutral-900 hover:text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.98] cursor-pointer group"
                   >
                     <ShoppingBag className="w-4 h-4 text-neutral-900 group-hover:text-white transition-colors" />
+
                     <span>Add to Bag</span>
                   </button>
 

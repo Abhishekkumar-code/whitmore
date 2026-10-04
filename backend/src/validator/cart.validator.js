@@ -14,7 +14,6 @@ const validaterequest= (req,res,next)=>{
 export const addtocartvalidator = [
     param("productId").isMongoId().withMessage("Invalid product ID"),
     param("variantId").isMongoId().withMessage("Invalid variant ID"),
-    body("quantity").isInt({ min: 1 }).withMessage("Quantity must be a positive integer"),
-    body("price").isFloat({ min: 0 }).withMessage("Price must be a positive number")
+    body("quantity").isInt({ min: 1 }).withMessage("Quantity must be a positive integer")
  ,validaterequest
 ]
