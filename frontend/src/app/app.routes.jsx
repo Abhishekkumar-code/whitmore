@@ -7,12 +7,18 @@ import Protected from "../features/auth/components/Protected.jsx"
 import PublicOnly from "../features/auth/components/PublicOnly.jsx"
 import Home from "../features/products/pages/Home.jsx"
 import Productdetails from "../features/products/pages/Productdetails.jsx";
+import Cart from "../features/cart/pages/Cart.jsx"
 import SellerProductDetail from "../features/products/pages/SellerProductDetail.jsx"
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Home/>
     },
+    {
+        path:"/cart",
+        element: <Protected><Cart/></Protected>
+    },
+
     {
         path: "/register",
         element: <PublicOnly><Register /></PublicOnly>

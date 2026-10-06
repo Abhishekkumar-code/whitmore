@@ -20,3 +20,9 @@ export const addItem = async ({ productId, varientId, quantity = 1 }) => {
     throw error;
   }
 };
+
+export const getCart = async()=>{
+  const response = await cartapiinstance.get("/getcart")
+  return response.data
+  
+}

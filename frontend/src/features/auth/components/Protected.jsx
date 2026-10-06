@@ -5,6 +5,9 @@ import { Navigate } from "react-router-dom";
 const Protected = ({ children, role }) => {
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.auth.loading);
+  console.log(user)
+console.log(loading)
+  
 
   if (loading) {
     return (
