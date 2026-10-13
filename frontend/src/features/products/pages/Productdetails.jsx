@@ -74,12 +74,6 @@ const formatDate = (dateStr) => {
   }
 };
 
-const DEMO_FALLBACK_IMAGES = [
-  "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1000&q=80",
-];
 
 const Productdetails = () => {
   const { productId } = useParams();
@@ -95,6 +89,7 @@ const Productdetails = () => {
   const [toastMessage, setToastMessage] = useState(null);
 
   const user = useSelector((state) => state.auth?.user);
+  const cartItems = useSelector((state) => state.cart?.items || []);
   const { handlegetproductdetail, loading, error } = useproduct();
   const { handleadditem } = useCart()
   const fetchProductDetail = async () => {
@@ -187,8 +182,8 @@ const Productdetails = () => {
       ? variantImages
       : mainImages.length > 0
         ? mainImages
-        : DEMO_FALLBACK_IMAGES;
-  const currentImage = imagesList[activeImageIdx] || imagesList[0];
+        : [];
+  const currentImage = imagesList[activeImageIdx] || imagesList[0] || null;
 
   // Active Price & Stock (falling back cleanly to base product)
   const activePrice = activeVariant?.price?.amount !== undefined
@@ -306,11 +301,24 @@ const Productdetails = () => {
     }
   };
 
-  const handleBuyNow = () => {
-    const variantInfo = activeVariant
-      ? ` (${formatVariantAttributesLabel(activeVariant.attributes)})`
-      : " (Main Product)";
-    showToast(`Redirecting to Checkout for "${product?.title || "item"}"${variantInfo}`);
+  const handleBuyNow = async () => {
+    if (!product?._id) return;
+    const targetVariant = activeVariant || product?.variants?.[0];
+    if (!targetVariant?._id) {
+      showToast("Please select a variant first");
+      return;
+    }
+
+    try {
+      await handleadditem({
+        productId: product._id,
+        varientId: targetVariant._id,
+        quantity: Number(quantity),
+      });
+      navigate("/cart");
+    } catch (err) {
+      navigate("/cart");
+    }
   };
 
   const toggleWishlist = () => {
@@ -358,7 +366,7 @@ const Productdetails = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => navigate("/")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-800 text-xs font-bold transition-all shadow-sm cursor-pointer"
@@ -367,6 +375,28 @@ const Productdetails = () => {
               <span className="hidden xs:inline">Back to Store</span>
               <span className="xs:hidden">Back</span>
             </button>
+
+            <button
+              onClick={() => navigate("/cart")}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer hover:bg-black transition-all"
+              title="View Shopping Bag"
+            >
+              <ShoppingCart className="w-4 h-4 text-amber-400" />
+              <span className="hidden sm:inline">Bag</span>
+              <span className="bg-white/20 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md ml-0.5">
+                {cartItems.length}
+              </span>
+            </button>
+
+            {user?.role === "seller" && (
+              <button
+                onClick={() => navigate("/seller/dashboard")}
+                className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-900 text-xs font-bold transition-all shadow-sm cursor-pointer"
+              >
+                <Store className="w-3.5 h-3.5" />
+                <span>Seller Atelier</span>
+              </button>
+            )}
 
             {user ? (
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-900 text-xs font-semibold">
@@ -451,15 +481,20 @@ const Productdetails = () => {
             {/* Left Column: Premium Main Product Image & Thumbnail Gallery */}
             <div className="lg:col-span-7 space-y-4 lg:sticky lg:top-24">
               <div className="relative w-full h-[320px] xs:h-[400px] sm:h-[500px] rounded-3xl bg-neutral-100 border border-neutral-200 overflow-hidden flex items-center justify-center shadow-md group">
-                <img
-                  src={currentImage}
-                  alt={product.title}
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = DEMO_FALLBACK_IMAGES[0];
-                  }}
-                />
+                {currentImage ? (
+                  <img
+                    src={currentImage}
+                    alt={product.title}
+                    className="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-neutral-400">
+                    <Shirt className="w-16 h-16 stroke-1" />
+                    <span className="text-xs font-bold uppercase tracking-wider">
+                      Product Preview
+                    </span>
+                  </div>
+                )}
 
                 <div className="absolute top-4 left-4 bg-neutral-900/80 backdrop-blur-md text-white text-[11px] font-extrabold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
                   <ImageIcon className="w-3.5 h-3.5 text-amber-400" />

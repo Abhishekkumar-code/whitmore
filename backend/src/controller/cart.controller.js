@@ -108,3 +108,71 @@ export async function getcartcontroller(req, res) {
         });
     }
 }
+
+
+
+export const incrementCartItemQuantity = async (req, res) => {
+    try {
+        const { productId, variantId } = req.params;
+
+        const product = await productmodel.findOne({
+            _id: productId,
+            "variants._id": variantId
+        });
+
+        if (!product) {
+            return res.status(404).json({
+                message: "Product or variant not found",
+                success: false
+            });
+        }
+
+        const cart = await cartmodel.findOne({ user: req.user._id });
+
+        if (!cart) {
+            return res.status(404).json({
+                message: "Cart not found",
+                success: false
+            });
+        }
+
+        const stock = Number(await stockofvarient(productId, variantId));
+
+        const itemInCart = cart.items.find(
+            item => item.product?.toString() === productId && item.varient?.toString() === variantId
+        );
+
+        if (!itemInCart) {
+            return res.status(404).json({
+                message: "Item not found in cart",
+                success: false
+            });
+        }
+
+        const itemQuantityInCart = Number(itemInCart.quantity || 0);
+
+        if (itemQuantityInCart + 1 > stock) {
+            return res.status(400).json({
+                message: `Only ${stock} items left in stock, and you already have ${itemQuantityInCart} items in your cart`,
+                success: false
+            });
+        }
+
+        itemInCart.quantity = itemQuantityInCart + 1;
+        await cart.save();
+
+        const updatedCart = await cartmodel.findOne({ user: req.user._id }).populate("items.product");
+
+        return res.status(200).json({
+            message: "Cart item quantity incremented successfully",
+            success: true,
+            cart: updatedCart
+        });
+    } catch (error) {
+        console.error("Increment cart item quantity error:", error);
+        return res.status(500).json({
+            message: error.message || "Internal server error while incrementing quantity",
+            success: false
+        });
+    }
+};

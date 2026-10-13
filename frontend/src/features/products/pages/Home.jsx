@@ -30,6 +30,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import useproduct from "../hooks/useproduct";
+import { useCart } from "../../cart/hook/useCart";
 
 const CURRENCY_SYMBOLS = {
   INR: "₹",
@@ -78,6 +79,8 @@ const Home = () => {
     (state) => state.product.allproducts || []
   );
   const user = useSelector((state) => state.auth?.user);
+  const cartitems = useSelector((state) => state.cart?.items || []);
+  const { handleadditem, handlegetcart } = useCart();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currencyFilter, setCurrencyFilter] = useState("ALL");
@@ -88,12 +91,14 @@ const Home = () => {
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [copiedId, setCopiedId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
   const [likedProducts, setLikedProducts] = useState(new Set());
 
   useEffect(() => {
     handleallproducts();
-  }, []);
+    if (user) {
+      handlegetcart();
+    }
+  }, [user]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -115,10 +120,34 @@ const Home = () => {
     });
   };
 
-  const addToCart = (product, e) => {
+  const addToCart = async (product, e) => {
     if (e) e.stopPropagation();
-    setCartItems((prev) => [...prev, product]);
-    showToast(`"${product.title}" added to shopping bag`);
+    if (!user) {
+      showToast("Please sign in to add items to your shopping bag");
+      navigate("/login");
+      return;
+    }
+
+    const variantId = product?.variants?.[0]?._id;
+    if (!variantId) {
+      navigate(`/products/${product._id}`);
+      return;
+    }
+
+    try {
+      const res = await handleadditem({
+        productId: product._id,
+        varientId: variantId,
+        quantity: 1,
+      });
+      if (res?.success) {
+        showToast(res.message || `"${product.title}" added to shopping bag`);
+      } else {
+        showToast(res?.message || "Failed to add product to shopping bag");
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || "Error adding item to shopping bag");
+    }
   };
 
   const handleCopyId = (id, e) => {
@@ -252,12 +281,16 @@ const Home = () => {
                 )}
               </button>
 
-              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer">
+              <button
+                onClick={() => navigate("/cart")}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer"
+                title="View Shopping Bag"
+              >
                 <ShoppingCart className="w-3.5 h-3.5 text-amber-400" />
                 <span className="bg-white/20 text-white text-[9px] font-black px-1 rounded">
-                  {cartItems.length}
+                  {cartitems.length}
                 </span>
-              </div>
+              </button>
             </div>
           </div>
 
@@ -312,18 +345,33 @@ const Home = () => {
               )}
             </button>
 
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer hover:bg-black transition-all">
+            <button
+              onClick={() => navigate("/cart")}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 text-white text-xs font-bold shadow-md cursor-pointer hover:bg-black transition-all"
+              title="View Shopping Bag"
+            >
               <ShoppingCart className="w-4 h-4 text-amber-400" />
               <span className="hidden md:inline">Bag</span>
               <span className="bg-white/20 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md ml-0.5">
-                {cartItems.length}
+                {cartitems.length}
               </span>
-            </div>
+            </button>
+
+            {user?.role === "seller" && (
+              <button
+                onClick={() => navigate("/seller/dashboard")}
+                className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-900 font-bold text-xs transition-all cursor-pointer shadow-sm"
+                title="Seller Dashboard"
+              >
+                <Store className="w-3.5 h-3.5" />
+                <span>Seller Atelier</span>
+              </button>
+            )}
 
             {user ? (
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-900 text-xs font-semibold">
                 <User className="w-3.5 h-3.5 text-neutral-700 shrink-0" />
-                <span className="max-w-[90px] truncate hidden md:inline">
+                <span className="max-w-[100px] truncate hidden md:inline">
                   {user.fullname || user.email}
                 </span>
               </div>
@@ -547,12 +595,7 @@ const Home = () => {
                       <img
                         src={mainImg}
                         alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80";
-                        }}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <div className="flex flex-col items-center gap-2 text-neutral-400">
@@ -584,10 +627,18 @@ const Home = () => {
                     </button>
 
                     <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-full py-2 bg-neutral-900/90 backdrop-blur-md text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProduct(product);
+                          setSelectedImageIdx(0);
+                        }}
+                        className="w-full py-2 bg-neutral-900/90 backdrop-blur-md text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-lg hover:bg-black transition-all cursor-pointer"
+                      >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Quick View</span>
-                      </div>
+                      </button>
                     </div>
                   </div>
 
@@ -643,8 +694,7 @@ const Home = () => {
                 <div
                   key={product._id}
                   onClick={() => {
-                    setSelectedProduct(product);
-                    setSelectedImageIdx(0);
+                    navigate(`/products/${product._id}`);
                   }}
                   className="group bg-white rounded-3xl border border-neutral-200 hover:border-neutral-400 p-4 transition-all duration-300 hover:shadow-lg flex flex-col sm:flex-row items-stretch gap-4 sm:gap-5 cursor-pointer"
                 >
@@ -653,12 +703,7 @@ const Home = () => {
                       <img
                         src={mainImg}
                         alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80";
-                        }}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <Shirt className="w-10 h-10 text-neutral-400 stroke-1" />
@@ -837,10 +882,22 @@ const Home = () => {
                 <div className="space-y-2 pt-4 border-t border-neutral-100">
                   <button
                     onClick={() => {
+                      const id = selectedProduct._id;
+                      setSelectedProduct(null);
+                      navigate(`/products/${id}`);
+                    }}
+                    className="w-full py-3 bg-neutral-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span>View Full Product Details</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
                       addToCart(selectedProduct);
                       setSelectedProduct(null);
                     }}
-                    className="w-full py-3 bg-neutral-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                    className="w-full py-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     <span>Add to Shopping Bag</span>
@@ -848,7 +905,7 @@ const Home = () => {
 
                   <button
                     onClick={() => setSelectedProduct(null)}
-                    className="w-full py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer text-center"
+                    className="w-full py-2 bg-transparent hover:bg-neutral-50 text-neutral-500 hover:text-neutral-900 font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer text-center"
                   >
                     Close Preview
                   </button>

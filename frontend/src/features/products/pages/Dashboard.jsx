@@ -194,6 +194,16 @@ const Dashboard = () => {
           <div className="flex items-center gap-2.5">
             <button
               type="button"
+              onClick={() => navigate("/")}
+              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-xs transition-all shadow-sm cursor-pointer"
+              title="Customer Storefront"
+            >
+              <Store className="w-4 h-4 text-neutral-600" />
+              <span>Storefront</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => handlegetsellerproducts()}
               disabled={loading}
               title="Refresh Products"
@@ -562,7 +572,8 @@ const Dashboard = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 justify-between">
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSelectedProduct(product);
                           setSelectedImageIdx(0);
                         }}
@@ -799,10 +810,21 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="p-4 sm:p-5 border-t border-neutral-200 bg-[#FBF9F5] flex justify-end">
+            <div className="p-4 sm:p-5 border-t border-neutral-200 bg-[#FBF9F5] flex items-center justify-end gap-2.5">
+              <button
+                onClick={() => {
+                  const id = selectedProduct._id;
+                  setSelectedProduct(null);
+                  navigate(`/seller/product/${id}`);
+                }}
+                className="px-5 py-2.5 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+              >
+                <ArrowUpRight className="w-3.5 h-3.5" />
+                <span>Manage Product</span>
+              </button>
               <button
                 onClick={() => setSelectedProduct(null)}
-                className="px-6 py-2.5 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-md"
+                className="px-5 py-2.5 rounded-xl border border-neutral-300 hover:bg-neutral-100 text-neutral-700 text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
               >
                 Close Preview
               </button>

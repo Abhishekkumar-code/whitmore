@@ -126,7 +126,7 @@ const CreateProducts = () => {
     const result = await handlecreateproduct(fd);
     if (result?.success) {
       images.forEach((img) => URL.revokeObjectURL(img.preview));
-      setTimeout(() => navigate("/"), 1400);
+      setTimeout(() => navigate("/seller/dashboard"), 1200);
     }
   };
 
@@ -137,7 +137,7 @@ const CreateProducts = () => {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/seller/dashboard")}
               aria-label="Go back"
               className="flex items-center justify-center w-9 h-9 rounded-xl border border-neutral-200 bg-white text-neutral-600 hover:text-black hover:border-neutral-400 transition-all cursor-pointer shadow-sm"
             >
@@ -159,6 +159,14 @@ const CreateProducts = () => {
               </p>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/seller/dashboard")}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-800 text-xs font-bold transition-all shadow-sm cursor-pointer"
+          >
+            <span>Dashboard</span>
+          </button>
         </div>
       </header>
 

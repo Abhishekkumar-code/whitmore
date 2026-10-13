@@ -26,3 +26,8 @@ export const getCart = async()=>{
   return response.data
   
 }
+
+export const Incrementcartitem = async ({productId,varientId})=>{
+  const response = await cartapiinstance.patch(`/quantity/increment/${productId}/${varientId}`)
+  return response.data
+}

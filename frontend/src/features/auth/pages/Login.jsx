@@ -86,7 +86,9 @@ const Login = () => {
 
         <div className="absolute inset-0 p-12 flex flex-col justify-between text-white z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xl font-black tracking-widest uppercase">WHITMORE</span>
+            <Link to="/" className="text-xl font-black tracking-widest uppercase hover:opacity-80 transition-opacity">
+              WHITMORE
+            </Link>
             <span className="text-[10px] tracking-widest uppercase px-3 py-1 rounded-full border border-white/30 backdrop-blur-md">
               AUTUMN / WINTER '26
             </span>
@@ -116,7 +118,9 @@ const Login = () => {
         <div className="w-full max-w-md space-y-6 sm:space-y-8">
           <div className="space-y-2">
             <div className="lg:hidden mb-4">
-              <span className="text-xl font-black tracking-widest uppercase text-neutral-900">WHITMORE</span>
+              <Link to="/" className="text-xl font-black tracking-widest uppercase text-neutral-900 inline-block hover:opacity-80 transition-opacity">
+                WHITMORE
+              </Link>
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900">
               Welcome Back
