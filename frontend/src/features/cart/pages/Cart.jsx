@@ -45,6 +45,7 @@ const getImageUrl = (img) => {
   if (img.url) return img.url;
   if (img.secure_url) return img.secure_url;
   if (img.preview) return img.preview;
+  if (img.src) return img.src;
   return null;
 };
 
@@ -196,7 +197,13 @@ const Cart = () => {
   // Safe increment handler using backend increment endpoint with stock verification
   const handleIncreaseQuantity = async (item) => {
     const productId = item.product?._id || item.product;
-    const variantId = item.varient || item.variant;
+    const variantId =
+      (typeof item.varient === "object" && item.varient !== null
+        ? item.varient._id
+        : item.varient) ||
+      (typeof item.variant === "object" && item.variant !== null
+        ? item.variant._id
+        : item.variant);
 
     if (productId && variantId) {
       try {
@@ -384,20 +391,35 @@ const Cart = () => {
                 const product = typeof item.product === "object" && item.product !== null ? item.product : {};
                 const productId = product._id || item.product;
 
-                // Extract all valid product and variant images
-                const rawImages = (product.images && product.images.length > 0 ? product.images : [])
+                // Match specific variant details
+                const variantList = Array.isArray(product.variants) ? product.variants : [];
+                const variantId =
+                  (typeof item.varient === "object" && item.varient !== null
+                    ? item.varient._id
+                    : item.varient) ||
+                  (typeof item.variant === "object" && item.variant !== null
+                    ? item.variant._id
+                    : item.variant);
+
+                const matchedVariant =
+                  (variantId && variantList.find((v) => String(v._id) === String(variantId))) ||
+                  (typeof item.varient === "object" && item.varient !== null ? item.varient : null) ||
+                  (typeof item.variant === "object" && item.variant !== null ? item.variant : null) ||
+                  variantList[0];
+
+                // Extract all valid product and variant images (prefer variant images if available)
+                const variantImages = (matchedVariant?.images && matchedVariant.images.length > 0 ? matchedVariant.images : [])
                   .map(getImageUrl)
                   .filter(Boolean);
 
+                const productImages = (product.images && product.images.length > 0 ? product.images : [])
+                  .map(getImageUrl)
+                  .filter(Boolean);
+
+                const rawImages = variantImages.length > 0 ? variantImages : productImages;
+
                 const activeImgIdx = selectedImgIndexes[item._id] || 0;
                 const activeImageUrl = rawImages[activeImgIdx] || rawImages[0] || null;
-
-                // Match specific variant details
-                const variantList = product.variants || [];
-                const matchedVariant =
-                  variantList.find(
-                    (v) => String(v._id) === String(item.varient || item.variant)
-                  ) || variantList[0];
 
                 const priceObj = item.price || product.price || { amount: 0, currency: "INR" };
                 const unitPrice = Number(priceObj.amount) || 0;
