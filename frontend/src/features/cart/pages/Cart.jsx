@@ -55,6 +55,8 @@ const Cart = () => {
 
   // Read live cart items from the Redux store
   const cartitems = useSelector((state) => state.cart?.items || []);
+  const cartTotalPrice = useSelector((state) => state.cart?.totalprice);
+  const cartCurrency = useSelector((state) => state.cart?.currency);
 
   // Retrieve cart operations from custom cart hook
   const {
@@ -95,10 +97,16 @@ const Cart = () => {
     };
   }, []);
 
-  // Filter out any invalid items to ensure clean rendering
+  // Filter out any invalid items to ensure clean rendering (handling aggregation response structure)
   const displayItems = useMemo(() => {
-    if (!Array.isArray(cartitems)) return [];
-    return cartitems.filter((item) => item && (item.product || item._id));
+    let rawList = cartitems;
+    if (Array.isArray(rawList) && rawList.length > 0 && Array.isArray(rawList[0]?.items)) {
+      rawList = rawList[0].items;
+    } else if (rawList && !Array.isArray(rawList) && Array.isArray(rawList.items)) {
+      rawList = rawList.items;
+    }
+    if (!Array.isArray(rawList)) return [];
+    return rawList.filter((item) => item && (item.product || item._id));
   }, [cartitems]);
 
   // Display brief toast notifications
@@ -111,20 +119,28 @@ const Cart = () => {
   const { subtotal, totalQuantity, currency } = useMemo(() => {
     let sub = 0;
     let qty = 0;
-    let curr = "INR";
+    let curr = cartCurrency || "INR";
 
     displayItems.forEach((item) => {
-      const priceObj = item.price || item.product?.price || { amount: 0, currency: "INR" };
+      const priceObj =
+        item.price ||
+        item.product?.variants?.price ||
+        item.product?.price ||
+        { amount: 0, currency: "INR" };
       const itemPrice = Number(priceObj.amount) || 0;
-      curr = priceObj.currency || "INR";
+      curr = priceObj.currency || curr;
       const itemQty = Number(item.quantity) || 1;
 
       sub += itemPrice * itemQty;
       qty += itemQty;
     });
 
+    if (sub === 0 && cartTotalPrice) {
+      sub = Number(cartTotalPrice) || 0;
+    }
+
     return { subtotal: sub, totalQuantity: qty, currency: curr };
-  }, [displayItems]);
+  }, [displayItems, cartTotalPrice, cartCurrency]);
 
   // Calculate promotional discount amount based on active voucher
   const discountAmount = useMemo(() => {
@@ -203,7 +219,10 @@ const Cart = () => {
         : item.varient) ||
       (typeof item.variant === "object" && item.variant !== null
         ? item.variant._id
-        : item.variant);
+        : item.variant) ||
+      (item.product?.variants && !Array.isArray(item.product.variants)
+        ? item.product.variants._id
+        : null);
 
     if (productId && variantId) {
       try {
@@ -399,9 +418,16 @@ const Cart = () => {
                     : item.varient) ||
                   (typeof item.variant === "object" && item.variant !== null
                     ? item.variant._id
-                    : item.variant);
+                    : item.variant) ||
+                  (product.variants && !Array.isArray(product.variants)
+                    ? product.variants._id
+                    : null);
 
+                // In aggregation pipeline, product.variants is the unwound matched variant object
                 const matchedVariant =
+                  (product.variants && !Array.isArray(product.variants) && typeof product.variants === "object"
+                    ? product.variants
+                    : null) ||
                   (variantId && variantList.find((v) => String(v._id) === String(variantId))) ||
                   (typeof item.varient === "object" && item.varient !== null ? item.varient : null) ||
                   (typeof item.variant === "object" && item.variant !== null ? item.variant : null) ||
@@ -416,12 +442,21 @@ const Cart = () => {
                   .map(getImageUrl)
                   .filter(Boolean);
 
-                const rawImages = variantImages.length > 0 ? variantImages : productImages;
+                // Show variant images first; include distinct product images in thumbnail switcher
+                const allImages = [...variantImages];
+                productImages.forEach((img) => {
+                  if (!allImages.includes(img)) allImages.push(img);
+                });
+                const rawImages = allImages.length > 0 ? allImages : (productImages.length > 0 ? productImages : []);
 
                 const activeImgIdx = selectedImgIndexes[item._id] || 0;
                 const activeImageUrl = rawImages[activeImgIdx] || rawImages[0] || null;
 
-                const priceObj = item.price || product.price || { amount: 0, currency: "INR" };
+                const priceObj =
+                  item.price ||
+                  matchedVariant?.price ||
+                  product.price ||
+                  { amount: 0, currency: "INR" };
                 const unitPrice = Number(priceObj.amount) || 0;
                 const itemCurrency = priceObj.currency || "INR";
                 const itemSubtotal = unitPrice * (Number(item.quantity) || 1);

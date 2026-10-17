@@ -20,11 +20,11 @@ export const useCart = () => {
     async function handlegetcart() {
         try {
             const data = await getCart();
-            const items = data?.cart?.items || data?.items || [];
-            dispatch(setItems(items));
-            return items;
+            const cart = data?.cart?.[0] || null;
+            dispatch(setItems({ items: cart?.items, totalprice: cart?.totalprice, currency: cart?.currency }));
+            return cart?.items || [];
         } catch (error) {
-            console.warn("Get cart warning/error:", error);
+            console.warn("Get cart error:", error);
         }
     }
 
@@ -32,11 +32,7 @@ export const useCart = () => {
         try {
             const data = await Incrementcartitem({ productId, varientId });
             if (data?.success) {
-                if (data.cart?.items) {
-                    dispatch(setItems(data.cart.items));
-                } else {
-                    dispatch(incrementQuantity({ productId, varientId }));
-                }
+                dispatch(incrementQuantity({ productId, varientId }));
             }
             return data;
         } catch (error) {
