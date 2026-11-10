@@ -1,9 +1,14 @@
-import { addItem, getCart, Incrementcartitem } from "../service/cart.service.js";
+import { addItem, createcartorder, getCart, Incrementcartitem } from "../service/cart.service.js";
 import { useDispatch } from "react-redux";
 import { addItem as additemtocart, setItems, updateQuantity, incrementQuantity, removeItem, clearCart } from "../cart.slice";
 
 export const useCart = () => {
     const dispatch = useDispatch();
+
+    async function handlecreatecartorder(){
+        const data = await createcartorder()
+        return data.order
+    }
 
     async function handleadditem({ productId, varientId, quantity = 1 }) {
         try {
@@ -59,6 +64,6 @@ export const useCart = () => {
         handleincrementquantity,
         handleupdatequantity, 
         handleremoveitem,
-        handleclearcart 
+        handleclearcart ,handlecreatecartorder
     };
 };

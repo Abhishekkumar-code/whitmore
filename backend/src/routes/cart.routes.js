@@ -5,6 +5,7 @@ import {addtocartcontroller} from "../controller/cart.controller.js";
 import { getcartcontroller } from "../controller/cart.controller.js"
 import {incrementCartItemQuantity} from "../controller/cart.controller.js"
 import {validateIncrementCartItemQuantity} from "../validator/cart.validator.js"
+import {createoreder} from "../controller/cart.controller.js"
 const cartrouter = express.Router();
 
 
@@ -34,4 +35,8 @@ cartrouter.get("/getcart",authicateuser, getcartcontroller);
  * @argument variantId - ID of the variant to update
  */
 cartrouter.patch("/quantity/increment/:productId/:variantId",authicateuser, validateIncrementCartItemQuantity, incrementCartItemQuantity)
+
+
+// payment 
+cartrouter.post("/payment/create/order",authicateuser,createoreder)
 export default cartrouter;

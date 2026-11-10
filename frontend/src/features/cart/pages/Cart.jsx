@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../hook/useCart";
+import { useRazorpay} from "react-razorpay";
 import {
   ShoppingBag,
   Trash2,
@@ -53,6 +54,8 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+   const {error,Razorpay} = useRazorpay();
+   const user = useSelector(state=>state.user)
   // Read live cart items from the Redux store
   const cartitems = useSelector((state) => state.cart?.items || []);
   const cartTotalPrice = useSelector((state) => state.cart?.totalprice);
@@ -64,6 +67,7 @@ const Cart = () => {
     handleupdatequantity,
     handleremoveitem,
     handleincrementquantity,
+    handlecreatecartorder
   } = useCart();
 
   // Component states for loading, discounts, promo codes, and notifications
@@ -96,7 +100,40 @@ const Cart = () => {
       isMounted = false;
     };
   }, []);
+  
 
+  // order payment 
+
+  async function handlecheckout(){
+    const order = await handlecreatecartorder()
+    console.log(order);
+
+    const options= {
+      key: "rzp_test_Ts3KhppuhcdsAN",
+      amount:order.amount, // Amount in paise
+      currency: order.currency,
+      name:"Whitmore",
+      description: "Test Transaction",
+      order_id: order.id, // Generate order_id on server
+      handler: (response) => {
+        console.log(response);
+        alert("Payment Successful!");
+      },
+      prefill: {
+        name: user?.fullname,
+        email: user?.email,
+        contact:user?.contact,
+      },
+      theme: {
+        color:"#3399cc",
+      },
+    };
+
+    const razorpayInstance = new Razorpay(options);
+    razorpayInstance.open();
+   };
+    
+  
   // Filter out any invalid items to ensure clean rendering (handling aggregation response structure)
   const displayItems = useMemo(() => {
     let rawList = cartitems;
@@ -501,11 +538,10 @@ const Cart = () => {
                               <button
                                 key={imgIdx}
                                 onClick={() => handleImageSwitch(item._id, imgIdx)}
-                                className={`w-5 h-5 rounded-md overflow-hidden border transition-all cursor-pointer ${
-                                  imgIdx === activeImgIdx
+                                className={`w-5 h-5 rounded-md overflow-hidden border transition-all cursor-pointer ${imgIdx === activeImgIdx
                                     ? "border-neutral-900 ring-2 ring-neutral-900/20 scale-105"
                                     : "border-neutral-200 opacity-60 hover:opacity-100"
-                                }`}
+                                  }`}
                                 title={`Thumbnail ${imgIdx + 1}`}
                               >
                                 <img
@@ -602,11 +638,10 @@ const Cart = () => {
                           <div className="flex items-center gap-2.5 ml-auto">
                             <button
                               onClick={() => toggleWishlist(item._id)}
-                              className={`p-2 rounded-xl border transition-all cursor-pointer ${
-                                isSaved
+                              className={`p-2 rounded-xl border transition-all cursor-pointer ${isSaved
                                   ? "bg-rose-50 border-rose-200 text-rose-600"
                                   : "bg-white border-neutral-200 text-neutral-400 hover:text-rose-500 hover:border-rose-200"
-                              }`}
+                                }`}
                               title={isSaved ? "Saved to Wishlist" : "Save for later"}
                             >
                               <Heart className={`w-3.5 h-3.5 ${isSaved ? "fill-rose-500" : ""}`} />
@@ -778,7 +813,7 @@ const Cart = () => {
 
                 {/* Main Checkout Button */}
                 <button
-                  onClick={handleProceedToCheckout}
+                  onClick={handlecheckout}
                   disabled={isCheckingOut}
                   className="w-full py-3.5 bg-neutral-900 hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 disabled:opacity-50"
                 >
@@ -795,7 +830,7 @@ const Cart = () => {
                     </>
                   )}
                 </button>
-
+                  
                 {/* Authenticity and policy badges */}
                 <div className="grid grid-cols-2 gap-2 pt-1 text-[10px] text-neutral-500">
                   <div className="flex items-center gap-1.5 bg-neutral-50 p-2 rounded-xl border border-neutral-200">
@@ -814,6 +849,5 @@ const Cart = () => {
       </main>
     </div>
   );
-};
-
+}
 export default Cart;
